@@ -1,0 +1,60 @@
+DROP TABLE IF EXISTS promocodes cascade;
+DROP TABLE IF EXISTS users cascade;
+DROP TABLE IF EXISTS games cascade;
+DROP TABLE IF EXISTS keys cascade;
+DROP TABLE IF EXISTS purchases cascade;
+
+
+CREATE TABLE  promocodes (
+ promocode_id  SERIAL PRIMARY KEY,
+ promocode TEXT NOT NULL,
+ discount DOUBLE PRECISION NOT NULL
+);
+
+CREATE TABLE users (
+	user_id SERIAL PRIMARY KEY,
+	login TEXT NOT NULL UNIQUE,
+	user_password TEXT NOT NULL,
+	balance DOUBLE PRECISION DEFAULT 0.0,
+	card_number TEXT
+);
+
+CREATE TABLE games (
+	game_id SERIAL PRIMARY KEY,
+	title TEXT NOT NULL UNIQUE,
+	description TEXT NOT NULL,
+	price DOUBLE PRECISION NOT NULL DEFAULT 0.0,
+	release_date DATE NOT NULL
+);
+
+CREATE INDEX ON games(title);
+
+CREATE TABLE keys (
+	key_id SERIAL NOT NULL,
+	game_key TEXT NOT NULL UNIQUE,
+	game_id INTEGER NOT NULL,
+	CONSTRAINT key_game_fk FOREIGN KEY(game_id)
+ 		REFERENCES games(game_id) ON DELETE CASCADE
+);
+
+CREATE INDEX ON keys(game_id);
+
+
+
+CREATE TABLE purchases (
+	purchase_id SERIAL PRIMARY KEY,
+	purchase_date DATE NOT NULL,
+	promocode_id INTEGER,
+	user_id INTEGER NOT NULL,
+	game_id INTEGER NOT NULL,
+		CONSTRAINT promocode_purchase_fk FOREIGN KEY(promocode_id)
+ 		REFERENCES promocodes(promocode_id) ON DELETE CASCADE,
+		CONSTRAINT user_purchase_fk FOREIGN KEY(user_id)
+ 		REFERENCES users(user_id) ON DELETE CASCADE,
+		CONSTRAINT game_purchase_fk FOREIGN KEY(game_id)
+ 		REFERENCES games(game_id) ON DELETE CASCADE
+);
+
+CREATE INDEX ON purchases(user_id);
+CREATE INDEX ON purchases(promocode_id);
+CREATE INDEX ON purchases(game_id);
