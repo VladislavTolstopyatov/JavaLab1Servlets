@@ -40,7 +40,7 @@ public class KeyDao implements Dao<Integer, Key> {
 
     private static final String FIND_BY_GAME = """
             SELECT key_id, game_key, game_id
-            FROM games
+            FROM keys
             WHERE game_id = ?
             """;
 
@@ -94,7 +94,7 @@ public class KeyDao implements Dao<Integer, Key> {
         }
     }
 
-    public List<Key> findAllByGameId(Long game_id) {
+    public List<Key> findAllByGameId(Integer game_id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME)) {
             preparedStatement.setObject(1, game_id);

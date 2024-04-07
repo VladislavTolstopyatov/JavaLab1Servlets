@@ -34,7 +34,7 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             """;
     private static final String UPDATE_SQL = """
             UPDATE purchases
-            SET purchase_date = ?, promocode_id = ?, user_id = ?, game_id = ?
+            SET purchase_date = ?, promocode_id = ?
             WHERE purchase_id = ?
             """;
 
@@ -109,7 +109,7 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
         }
     }
 
-    public List<Purchase> findAllByGameID(Long id) {
+    public List<Purchase> findAllByGameID(Integer id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_ID)) {
             preparedStatement.setObject(1, id);
@@ -124,7 +124,7 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
         }
     }
 
-    public List<Purchase> findAllByUserID(Long id) {
+    public List<Purchase> findAllByUserID(Integer id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USER_ID)) {
             preparedStatement.setObject(1, id);
@@ -160,9 +160,7 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setObject(1, purchase.getDateOfPurchase());
             preparedStatement.setObject(2, purchase.getPromocode_id());
-            preparedStatement.setObject(3, purchase.getUserId());
-            preparedStatement.setObject(4, purchase.getGameId());
-            preparedStatement.setObject(5, purchase.getId());
+            preparedStatement.setObject(3, purchase.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

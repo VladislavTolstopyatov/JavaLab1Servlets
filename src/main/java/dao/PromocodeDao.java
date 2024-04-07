@@ -39,7 +39,7 @@ public class PromocodeDao implements Dao<Integer, Promocode> {
     private static final String FIND_BY_PROMOCODE = """
             SELECT promocode_id, promocode, discount
             FROM promocodes
-            WHERE promocode_id = ?
+            WHERE promocode = ?
             """;
 
 

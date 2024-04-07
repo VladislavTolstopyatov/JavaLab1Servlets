@@ -121,6 +121,7 @@ public class GameDao implements Dao<Integer, Game> {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setDouble(1, game.getPrice());
+            preparedStatement.setObject(2, game.getId());
             //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

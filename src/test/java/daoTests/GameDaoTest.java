@@ -1,3 +1,5 @@
+package daoTests;
+
 import dao.GameDao;
 import entity.Game;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
@@ -52,5 +54,39 @@ public class GameDaoTest {
         Game game = gameDao.save(new Game(null, "test", "testDescription", 1000, LocalDate.now()));
         Game gameFromDao = gameDao.findById(game.getId());
         assertEquals(game, gameFromDao);
+    }
+
+    @Test
+    void updateGameTest() throws GameWithSuchTitleAlreadyExistsException {
+        Game gameToInsert = new Game(null, "testing", "testing", 25, LocalDate.now());
+        Game game = gameDao.save(gameToInsert);
+
+        gameToInsert.setId(game.getId());
+        gameToInsert.setPrice(10);
+        gameDao.update(gameToInsert);
+
+        Game result = gameDao.findById(game.getId());
+        assertEquals(result, gameToInsert);
+    }
+
+    @Test
+    void deleteByIdGameTest() throws GameWithSuchTitleAlreadyExistsException {
+        Game gameToInsert = new Game(null, "K", "K", 2000, LocalDate.now());
+        Game gameFromDao = gameDao.save(gameToInsert);
+
+        gameToInsert.setId(gameFromDao.getId());
+        gameDao.deleteById(gameToInsert.getId());
+
+        assertNull(gameDao.findById(gameToInsert.getId()));
+    }
+
+    @Test
+    void findByTitleGameTest() throws GameWithSuchTitleAlreadyExistsException {
+        Game gameToInsert = new Game(null, "tTITLE", "ababab", 2000, LocalDate.now());
+        Game gameFromDao = gameDao.save(gameToInsert);
+
+        Game findGameByTitle = gameDao.findByTitle(gameToInsert.getTitle());
+
+        assertEquals(gameToInsert.getTitle(), gameFromDao.getTitle());
     }
 }

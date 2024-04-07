@@ -14,7 +14,7 @@ CREATE TABLE  promocodes (
 CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	login TEXT NOT NULL UNIQUE,
-	user_password TEXT NOT NULL,
+	user_password INTEGER NOT NULL,
 	user_role TEXT NOT NULL,
 	balance DOUBLE PRECISION DEFAULT 0.0,
 	card_number TEXT

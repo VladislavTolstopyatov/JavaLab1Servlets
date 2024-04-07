@@ -19,36 +19,36 @@ public class UserDao implements Dao<Integer, User> {
     //private static final UserDao INSTANCE = new UserDao();
 
     private static final String FIND_BY_LOGIN_SQL = """
-            SELECT user_id, login, user_password, balance, card_number, user_role
+            SELECT user_id, login, user_password, user_role, balance, card_number
             FROM users
             WHERE login = ?
             """;
 
     public static final String SAVE_SQL = """
-            INSERT INTO users(login, user_password, user_role, card_number) 
-            VALUES (?, ?, ?, ?);
+            INSERT INTO users(login, user_password, user_role, balance, card_number) 
+            VALUES (?, ?, ?, ?, ?);
             """;
 
     public static final String FIND_BY_EMAIL_AND_PASSWORD = """
-            SELECT user_id, login, user_password, role, balance, card_number
+            SELECT user_id, login, user_password, user_role, balance, card_number
             FROM users
             WHERE login = ? AND user_password = ?;
             """;
 
     private static final String FIND_BY_PASSWORD = """
-            SELECT user_id, login, user_password, role, balance, card_number
+            SELECT user_id, login, user_password, user_role, balance, card_number
             FROM users
-            WHERE password = ?
+            WHERE user_password = ?
             """;
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT user_id, login, user_password, role, balance, card_number
+            SELECT user_id, login, user_password, user_role, balance, card_number
             FROM users
             WHERE user_id = ?
             """;
 
     private static final String FIND_ALL_SQL = """
-            SELECT user_id, login, user_password, role, balance, card_number
+            SELECT user_id, login, user_password, user_role, balance, card_number
             FROM users
             """;
 
@@ -62,6 +62,12 @@ public class UserDao implements Dao<Integer, User> {
             WHERE login = ?
             """;
 
+    private static final String UPDATE_SQL = """
+            UPDATE users
+            SET balance = ?
+            WHERE user_id = ?
+            """;
+
 
     @Override
     public User save(User user) throws LoginAlreadyRegisteredException {
@@ -70,20 +76,20 @@ public class UserDao implements Dao<Integer, User> {
         if (userCheck != null) {
             throw new LoginAlreadyRegisteredException(LOGIN_ALREADY_REGISTERED_MSG);
         }
-        User user1 = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, user.getLogin());
-            preparedStatement.setObject(2, Objects.hash(user.getPassword()));
+            preparedStatement.setObject(2, user.getPassword());
             preparedStatement.setObject(3, String.valueOf(user.getRole()));
-            preparedStatement.setObject(4, user.getCardNumber());
+            preparedStatement.setObject(4, user.getBalance());
+            preparedStatement.setObject(5, user.getCardNumber());
             preparedStatement.executeUpdate();
             final ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 user.setId(resultSet.getObject(1, Integer.class));
             }
-            return user1;
+            return user;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -122,7 +128,14 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public void update(User user) {
-
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setObject(1, user.getBalance());
+            preparedStatement.setObject(2, user.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public User findByLogin(String login) {
@@ -141,12 +154,12 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    public User findByPassword(String password) {
+    public User findByPassword(Integer password) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_PASSWORD)) {
 
-            preparedStatement.setObject(1, Objects.hash(password));
+            preparedStatement.setObject(1, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = buildUserEntity(resultSet);
@@ -181,13 +194,13 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    public User findByLoginAndPassword(String login, String password) {
+    public User findByLoginAndPassword(String login, Integer password) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMAIL_AND_PASSWORD)) {
 
             preparedStatement.setObject(1, login);
-            preparedStatement.setObject(2, Objects.hash(password));
+            preparedStatement.setObject(2, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
