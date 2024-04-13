@@ -2,9 +2,11 @@ package daoTests;
 
 import dao.GameDao;
 import dao.KeyDao;
-import entity.Game;
-import entity.Key;
+import entities.Game;
+import entities.Key;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -14,19 +16,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class KeyDaoTest {
-    static GameDao gameDao;
-    static Game game;
+    static GameDao gameDao = new GameDao();
     KeyDao keyDao = new KeyDao();
 
-    static {
-        gameDao = new GameDao();
-        try {
-            game = gameDao.save(new Game(null, "TestGameForGame", "test", 200, LocalDate.now()));
-        } catch (GameWithSuchTitleAlreadyExistsException e) {
-            throw new RuntimeException(e);
-        }
+    static Game game;
+
+    @BeforeEach
+    void initGame() throws GameWithSuchTitleAlreadyExistsException {
+        game = gameDao.save(new Game(null, "TestGameForGame", "test", 200, LocalDate.now(),null));
     }
 
+    @AfterEach
+    void deleteGameFromDB() {
+        gameDao.deleteById(game.getId());
+    }
 
     @Test
     void saveKeyTest() {

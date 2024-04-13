@@ -1,4 +1,4 @@
-package entity;
+package entities;
 
 import java.util.Arrays;
 import java.util.Optional;

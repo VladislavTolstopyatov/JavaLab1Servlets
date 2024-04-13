@@ -1,33 +1,25 @@
-package entity;
+package dto;
+
+import entities.Key;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
-public class Game {
-    private Integer id;
+public class GameDto {
     private String title;
     private String description;
     private double price;
     private LocalDate dateOfRelease;
+    private List<Key> keys;
+    private Integer keysCount;
 
-    public Game(Integer id, String title, String description, double price, LocalDate dateOfRelease) {
-        this.id = id;
+    public GameDto(String title, String description, double price, LocalDate dateOfRelease, List<Key> keys, Integer keysCount) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.dateOfRelease = dateOfRelease;
-    }
-
-    public Game() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.keys = keys;
+        this.keysCount = keysCount;
     }
 
     public String getTitle() {
@@ -62,20 +54,19 @@ public class Game {
         this.dateOfRelease = dateOfRelease;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Game game = (Game) o;
-        return Double.compare(price, game.price) == 0 &&
-                Objects.equals(id, game.id) &&
-                Objects.equals(title, game.title) &&
-                Objects.equals(description, game.description) &&
-                Objects.equals(dateOfRelease, game.dateOfRelease);
+    public List<Key> getKeys() {
+        return keys;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, description, price, dateOfRelease);
+    public void setKeys(List<Key> keys) {
+        this.keys = keys;
+    }
+
+    public Integer getKeysCount() {
+        return keysCount;
+    }
+
+    public void setKeysCount(Integer keysCount) {
+        this.keysCount = keysCount;
     }
 }

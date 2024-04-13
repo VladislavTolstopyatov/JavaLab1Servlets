@@ -1,15 +1,13 @@
 package dao;
 
-import entity.Game;
+import entities.Game;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import util.ConnectionManager;
 import util.TimeUtils;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GameDao implements Dao<Integer, Game> {
 
@@ -51,6 +49,18 @@ public class GameDao implements Dao<Integer, Game> {
             SELECT game_id, title, description, price, release_date
             FROM games
             WHERE title = ?
+            """;
+
+    private static final String FIND_TITLE_BY_ID = """
+            SELECT title
+            FROM games
+            WHERE  game_id = ?
+            """;
+
+    private static final String FIND_ID_BY_TITLE = """
+            SELECT game_id
+            FROM games
+            WHERE  title = ?
             """;
 
     @Override
@@ -129,6 +139,42 @@ public class GameDao implements Dao<Integer, Game> {
         }
     }
 
+    public Integer FindIdByTitle(String title) {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ID_BY_TITLE)) {
+            preparedStatement.setString(1,title);
+            //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
+            Integer result;
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getInt("game_id");
+                    return result;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public String FindTitleById(Integer id) {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_TITLE_BY_ID)) {
+            preparedStatement.setInt(1, id);
+            //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
+            String result;
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getString("title");
+                    return result;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     @Override
     public boolean deleteById(Integer game_id) {
         try (Connection connection = ConnectionManager.getConnection();
@@ -169,6 +215,7 @@ public class GameDao implements Dao<Integer, Game> {
         game.setDescription(resultSet.getString("description"));
         game.setPrice(resultSet.getDouble("price"));
         game.setDateOfRelease(TimeUtils.convertToLocalDateViaSqlDate(resultSet.getDate("release_date")));
+        game.setKeys(null);
         return game;
     }
 }

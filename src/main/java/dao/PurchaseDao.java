@@ -1,7 +1,6 @@
 package dao;
 
-import entity.Promocode;
-import entity.Purchase;
+import entities.Purchase;
 import util.ConnectionManager;
 import util.TimeUtils;
 
@@ -9,21 +8,20 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class PurchaseDao implements Dao<Integer, Purchase> {
 
     private static final String FIND_ALL_PURCHASES = """
-            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id
+            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO purchases(purchase_date, promocode_id, user_id, game_id)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO purchases(purchase_date, promocode_id, user_id, game_id, keyStr)
+            VALUES (?, ?, ?, ?, ?)
             """;
 
     private static final String FIND_PURCHASE_BY_ID = """
-            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id
+            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
             WHERE purchase_id = ?
             """;
@@ -39,22 +37,23 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             """;
 
     private static final String FIND_BY_USER_ID = """
-            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id
+            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
             WHERE user_id = ?
             """;
 
     private static final String FIND_BY_GAME_ID = """
-            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id
+            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
             WHERE game_id = ?
             """;
 
     private static final String FIND_BY_PURCHASE_DATE = """
-            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id
+            SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
             WHERE purchase_date = ?
             """;
+
 
     @Override
     public Purchase save(Purchase purchase) {
@@ -62,9 +61,10 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, purchase.getDateOfPurchase());
-            preparedStatement.setObject(2, purchase.getPromocode_id());
+            preparedStatement.setObject(2, purchase.getPromocodeId());
             preparedStatement.setObject(3, purchase.getUserId());
             preparedStatement.setObject(4, purchase.getGameId());
+            preparedStatement.setObject(5, purchase.getKeyStr());
 
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -159,7 +159,7 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setObject(1, purchase.getDateOfPurchase());
-            preparedStatement.setObject(2, purchase.getPromocode_id());
+            preparedStatement.setObject(2, purchase.getPromocodeId());
             preparedStatement.setObject(3, purchase.getId());
 
             preparedStatement.executeUpdate();
@@ -185,9 +185,10 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
 
         purchase.setId(resultSet.getInt("purchase_id"));
         purchase.setDateOfPurchase(TimeUtils.convertToLocalDateViaSqlDate(resultSet.getDate("purchase_date")));
-        purchase.setPromocode_id(resultSet.getInt("promocode_id"));
+        purchase.setPromocodeId(resultSet.getInt("promocode_id"));
         purchase.setUserId(resultSet.getInt("user_id"));
         purchase.setGameId(resultSet.getInt("game_id"));
+        purchase.setKeyStr(resultSet.getString("keyStr"));
 
         return purchase;
     }

@@ -1,13 +1,11 @@
 package dao;
 
-import entity.Key;
-import entity.Promocode;
+import entities.Promocode;
 import util.ConnectionManager;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class PromocodeDao implements Dao<Integer, Promocode> {
 

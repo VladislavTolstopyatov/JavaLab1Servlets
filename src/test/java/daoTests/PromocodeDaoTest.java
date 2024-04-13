@@ -1,7 +1,7 @@
 package daoTests;
 
 import dao.PromocodeDao;
-import entity.Promocode;
+import entities.Promocode;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class PromocodeDaoTest {
         Promocode promocode = promocodes.get(0);
         testPromocode.setId(promocode.getId());
         assertEquals(testPromocode, promocode);
+        promocodeDao.deleteById(testPromocode.getId());
     }
 
     @Test
@@ -30,6 +31,7 @@ public class PromocodeDaoTest {
         Promocode promocodeFromDao = promocodeDao.save(new Promocode(null, "promo", 10));
         Promocode promocode = promocodeDao.findById(promocodeFromDao.getId());
         assertEquals(promocodeFromDao, promocode);
+        promocodeDao.deleteById(promocode.getId());
     }
 
     @Test
@@ -51,6 +53,10 @@ public class PromocodeDaoTest {
 
         assertTrue(promocodes.size() == promocodesFromDao.size() &&
                 promocodesFromDao.containsAll(promocodes) && promocodes.containsAll(promocodesFromDao));
+
+        for (Promocode promocode : promocodesFromDao) {
+            promocodeDao.deleteById(promocode.getId());
+        }
     }
 
     @Test
@@ -66,6 +72,7 @@ public class PromocodeDaoTest {
         promocodeFromDao = promocodeDao.findById(promocodeToInsert.getId());
 
         assertEquals(promocodeFromDao, promocodeToInsert);
+        promocodeDao.deleteById(promocodeFromDao.getId());
     }
 
     @Test
@@ -80,5 +87,6 @@ public class PromocodeDaoTest {
         Promocode promocode = promocodeDao.save(new Promocode(null, "test", 1));
         Promocode promocodeFromDao = promocodeDao.findByPromocode(promocode.getPromoStr());
         assertEquals(promocode.getPromoStr(), promocodeFromDao.getPromoStr());
+        promocodeDao.deleteById(promocodeFromDao.getId());
     }
 }

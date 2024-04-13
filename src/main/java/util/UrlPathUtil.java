@@ -1,5 +1,10 @@
 package util;
 
 public class UrlPathUtil {
-    private static final String GAMES  = "games";
+    public static final String GAMES = "/games";
+    public static final String LOGIN = "/login";
+    public static final String LOGOUT = "/logout";
+    public static final String REGISTRATION = "/registration";
+    public static final String BUYGAME = "/buyGame";
+    public static final String USER = "/user";
 }

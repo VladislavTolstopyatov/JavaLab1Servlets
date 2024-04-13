@@ -1,14 +1,11 @@
 package dao;
 
-import entity.Game;
-import entity.Key;
+import entities.Key;
 import util.ConnectionManager;
-import util.TimeUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class KeyDao implements Dao<Integer, Key> {
     private static final String FIND_ALL_KEYS = """
@@ -38,10 +35,19 @@ public class KeyDao implements Dao<Integer, Key> {
             WHERE key_id = ?
             """;
 
-    private static final String FIND_BY_GAME = """
+    private static final String FIND_BY_GAME_ID = """
             SELECT key_id, game_key, game_id
             FROM keys
             WHERE game_id = ?
+            """;
+
+    private static final String FIND_BY_GAME_TITLE = """
+            SELECT key_id, game_key, game_id
+            FROM keys
+            WHERE game_id = (SELECT game_id
+            FROM games
+            WHERE title = ?
+            )
             """;
 
     @Override
@@ -96,8 +102,23 @@ public class KeyDao implements Dao<Integer, Key> {
 
     public List<Key> findAllByGameId(Integer game_id) {
         try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_ID)) {
             preparedStatement.setObject(1, game_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Key> result = new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(buildKeyEntity(resultSet));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Key> findAllByTitle(String title) {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_TITLE)) {
+            preparedStatement.setObject(1, title);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Key> result = new ArrayList<>();
             while (resultSet.next()) {

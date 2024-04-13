@@ -1,17 +1,13 @@
 package dao;
 
-import entity.Purchase;
-import entity.Role;
-import entity.User;
+import entities.Role;
+import entities.User;
 import exceptions.LoginAlreadyRegisteredException;
 import util.ConnectionManager;
-import util.TimeUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class UserDao implements Dao<Integer, User> {
 
@@ -194,7 +190,7 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    public User findByLoginAndPassword(String login, Integer password) {
+    public User findByLoginAndPassword(String login, String password) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMAIL_AND_PASSWORD)) {
@@ -217,7 +213,7 @@ public class UserDao implements Dao<Integer, User> {
 
         user.setId(resultSet.getInt("user_id"));
         user.setLogin(resultSet.getString("login"));
-        user.setPassword(resultSet.getInt("user_password"));
+        user.setPassword(resultSet.getString("user_password"));
         user.setBalance(resultSet.getDouble("balance"));
         user.setCardNumber(resultSet.getString("card_number"));
         user.setRole(Role.find(resultSet.getString("user_role")).orElse(null));

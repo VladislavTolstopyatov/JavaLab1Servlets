@@ -1,0 +1,84 @@
+h1 {
+    color: #652020;
+    font-family: Arial, sans-serif;
+    font-size: 55px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+body {
+    background-color: #936dd5;
+    font-family: Arial, sans-serif;
+}
+
+.buy-game-form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.buy-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+
+.buy-button:hover {
+    background-color: #45a049;
+}
+
+.games-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px; /* Увеличиваем размер кнопки */
+    font-size: 16px; /* Увеличиваем размер шрифта кнопки */
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.games-button:hover {
+    background-color: #0056b3;
+}
+
+.profile-link {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Example background color */
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.profile-link:hover {
+    background-color: #45a049; /* Optional: change background color on hover */
+}

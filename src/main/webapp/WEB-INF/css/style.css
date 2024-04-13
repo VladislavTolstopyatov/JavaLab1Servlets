@@ -1,0 +1,109 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #936dd5;
+}
+p {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #333;
+    text-align: left;
+    margin-top: 0px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+h1 {
+    color: #652020;
+    font-family: Arial, sans-serif;
+    font-size: 55px;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+h2 {
+    color: #000099; /* Цвет текста */
+    font-family: Arial, sans-serif; /* Шрифт */
+    font-size: 25px; /* Размер шрифта */
+    font-weight: bold; /* Жирность шрифта */
+    text-align: center; /* Выравнивание текста */
+    margin-top: 0px; /* Отступ сверху */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+.game-item {
+    border: 2px solid #e4e4e4; /* Создание рамки */
+    border-radius: 10px; /* Скругление углов рамки */
+    padding: 10px; /* Внутренний отступ */
+    margin-bottom: 10px; /* Отступ снизу */
+    background-color: #f8f8f8; /* Фон элемента */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для элемента */
+}
+
+.game-item ul {
+    list-style-type: none; /* Удаление маркеров списка */
+    padding-left: 0; /* Удаление отступа слева */
+}
+
+.game-item li {
+    font-family: "Public Sans", Verdana, sans-serif; /* Шрифт */
+    font-size: 18px; /* Размер шрифта */
+    color: DarkSlateGray; /* Цвет текста */
+    margin-bottom: 5px; /* Отступ между элементами списка */
+}
+
+.buy-button {
+    float: right; /* Выравнивание кнопки справа */
+    background-color: #4CAF50; /* Цвет фона */
+    color: #0a0808; /* Цвет текста */
+    padding: 10px 20px; /* Внутренний отступ */
+    border: none; /* Удаление границы */
+    cursor: pointer; /* Изменение курсора при наведении */
+    margin-top: 10px; /* Отступ сверху */
+    border-radius: 5px; /* Скругляет углы кнопки */
+}
+
+.buy-button:hover {
+    background-color: #1d2798; /* Изменение цвета фона при наведении */
+}
+
+.auth-button-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    /*z-index: 1000;*/
+}
+
+.auth-form {
+    display: inline-block;
+}
+
+.auth-button {
+    padding: 10px 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    margin-top: 70px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+}
+
+.profile-link {
+    text-align: center; /* Выравнивание текста по правому краю */
+    border: none;
+    padding: 10px; /* Отступ внутри рамки */
+    margin-left: 80px;
+    border-radius: 5px;
+    background-color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+}

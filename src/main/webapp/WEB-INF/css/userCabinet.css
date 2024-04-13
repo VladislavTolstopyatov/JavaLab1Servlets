@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #b7cbb6;
+    margin: 0;
+    padding: 0;
+    color: #333; /* Добавлено для улучшения читаемости текста */
+}
+
+.user-profile {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #dde7d8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border-radius: 5px; /* Добавлено скругление углов для блока профиля */
+}
+
+.profile-info {
+    flex: 1;
+    font-size: 25px;
+    border-right: 1px solid #ddd;
+    padding-right: 10px;
+}
+
+.profile-info p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 18px; /* Уменьшен размер шрифта для улучшения читаемости */
+}
+
+.profile-info p:first-child {
+    font-weight: bold; /* Выделение первого элемента для лучшей визуальной разметки */
+}
+
+.purchase-history {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.games-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease; /* Добавлено плавное изменение цвета */
+}
+
+.games-button:hover {
+    background-color: #0056b3;
+}
+
+.purchase-history ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.purchase-history li {
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-history li:nth-child(even) {
+    background-color: #e0e0e0;
+}
+
+.purchase-history .thank-you {
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Добавленные стили для улучшения визуального восприятия */
+.profile-info, .purchase-history {
+    box-sizing: border-box; /* Улучшает расчет размеров элементов */
+}
+
+.profile-info p {
+    margin-bottom: 10px; /* Увеличен отступ снизу для улучшения читаемости */
+}
+
+.profile-info p:last-child {
+    margin-bottom: 0; /* Удален отступ снизу для последнего элемента */
+}
