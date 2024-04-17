@@ -1,3 +1,11 @@
+body {
+    display: block;
+    position: relative;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
 h1 {
     color: #652020;
     font-family: Arial, sans-serif;
@@ -5,11 +13,6 @@ h1 {
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
-}
-
-body {
-    background-color: #936dd5;
-    font-family: Arial, sans-serif;
 }
 
 .buy-game-form {
@@ -58,10 +61,11 @@ body {
     right: 10px;
     background-color: #007bff;
     color: #fff;
-    padding: 15px 30px; /* Увеличиваем размер кнопки */
-    font-size: 16px; /* Увеличиваем размер шрифта кнопки */
+    padding: 15px 30px;
+    font-size: 16px;
     border-radius: 5px;
     text-decoration: none;
+    margin: 10px;
 }
 
 .games-button:hover {
@@ -70,15 +74,16 @@ body {
 
 .profile-link {
     position: absolute;
-    top: 10px; /* Adjust as needed */
-    left: 10px; /* Adjust as needed */
+    top: 10px;
+    left: 10px;
     padding: 10px 20px;
-    background-color: #4CAF50; /* Example background color */
-    color: white; /* Text color */
-    text-decoration: none; /* Remove underline from link */
-    border-radius: 5px; /* Optional: rounded corners */
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px;
 }
 
 .profile-link:hover {
-    background-color: #45a049; /* Optional: change background color on hover */
+    background-color: #45a049;
 }

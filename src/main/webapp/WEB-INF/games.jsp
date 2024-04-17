@@ -12,6 +12,10 @@
 
 <h1>Добро пожаловать в GameShop!</h1><br/>
 <h2>Все доступные игры</h2><br/>
+
+<div class="search-container">
+    <a href="${pageContext.request.contextPath}/findGame">Поиск по названию</a>
+</div>
 <c:choose>
     <c:when test="${not empty requestScope.games}">
         <c:forEach var="game" items="${requestScope.games}">

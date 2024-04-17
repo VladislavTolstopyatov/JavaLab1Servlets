@@ -3,7 +3,9 @@ package services;
 import dao.GameDao;
 import dao.KeyDao;
 import dto.GameDto;
+import dto.KeyDto;
 import entities.Game;
+import entities.Key;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import mappers.GameMapper;
 
@@ -21,11 +23,19 @@ public class GameService {
         return gameMapper.map(gameDao.findById(id));
     }
 
-    public GameDto findByTitle(String title) {
+    public GameDto findByTitle(String title) throws GameWithSuchTitleAlreadyExistsException {
         if (title.isEmpty()) {
             throw new IllegalArgumentException("title is empty!");
         }
-        return gameMapper.map(gameDao.findByTitle(title));
+        try {
+            GameDto gameDto = gameMapper.map(gameDao.findByTitle(title));
+            List<Key> keys = keyDao.findAllByTitle(title);
+            gameDto.setKeys(keys);
+            gameDto.setKeysCount(keys.size());
+            return gameDto;
+        } catch (GameWithSuchTitleAlreadyExistsException e) {
+            throw new GameWithSuchTitleAlreadyExistsException(e.getMessage());
+        }
     }
 
     public Game createGame(GameDto gameDto) {
@@ -52,7 +62,7 @@ public class GameService {
     }
 
     public String findTitleById(Integer id) {
-        if (id <=0) {
+        if (id <= 0) {
             throw new IllegalArgumentException("id<=0");
         }
         return gameDao.FindTitleById(id);

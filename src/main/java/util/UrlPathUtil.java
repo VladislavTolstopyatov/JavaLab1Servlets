@@ -7,4 +7,6 @@ public class UrlPathUtil {
     public static final String REGISTRATION = "/registration";
     public static final String BUYGAME = "/buyGame";
     public static final String USER = "/user";
+
+    public static final String FIND_GAME = "/findGame";
 }

@@ -12,6 +12,7 @@ import java.util.List;
 public class GameDao implements Dao<Integer, Game> {
 
     private final String GAME_WITH_SUCH_TITLE_ALREADY_EXISTS = "Игра с таким названием уже существует!";
+    private final String GAME_NOT_FOUND = "Игра не найдена!";
 
     // найти все игры
     private static final String FIND_ALL_GAMES = """
@@ -142,7 +143,7 @@ public class GameDao implements Dao<Integer, Game> {
     public Integer FindIdByTitle(String title) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ID_BY_TITLE)) {
-            preparedStatement.setString(1,title);
+            preparedStatement.setString(1, title);
             //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
             Integer result;
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -188,7 +189,7 @@ public class GameDao implements Dao<Integer, Game> {
         }
     }
 
-    public Game findByTitle(String title) {
+    public Game findByTitle(String title) throws GameWithSuchTitleAlreadyExistsException {
         Game game = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_TITLE)) {
@@ -204,7 +205,7 @@ public class GameDao implements Dao<Integer, Game> {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-        return game;
+        throw new GameWithSuchTitleAlreadyExistsException(GAME_NOT_FOUND);
     }
 
     private Game buildGameEntity(ResultSet resultSet) throws SQLException {
