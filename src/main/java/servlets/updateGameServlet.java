@@ -3,7 +3,6 @@ package servlets;
 import dao.GameDao;
 import dao.KeyDao;
 import dto.GameDto;
-import exceptions.GameWithSuchTitleAlreadyExistsException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,34 +29,22 @@ public class updateGameServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            String title = req.getParameter("title");
-            GameDto gameDto = gameService.findByTitle(title);
-            req.setAttribute("gameDto", gameDto);
-            req.setAttribute("title", title);
-            req.getRequestDispatcher(JspHelper.get("updateGame")).forward(req, resp);
-        } catch (GameWithSuchTitleAlreadyExistsException e) {
-            String message = e.getMessage();
-            req.setAttribute("message", message);
-            req.getRequestDispatcher(JspHelper.get("updateGame")).forward(req, resp);
-        }
+        String title = req.getParameter("title");
+        GameDto gameDto = gameService.findByTitle(title);
+        req.setAttribute("gameDto", gameDto);
+        req.setAttribute("title", title);
+        req.getRequestDispatcher(JspHelper.get("updateGame")).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
-            Double price = Double.valueOf(req.getParameter("newPrice"));
-            String title = req.getParameter("title");
-            GameDto gameDto = gameService.findByTitle(title);
-            gameDto.setPrice(price);
-            gameService.update(gameDto);
-            resp.sendRedirect(GAMES);
+        Double price = Double.valueOf(req.getParameter("newPrice"));
+        String title = req.getParameter("title");
+        GameDto gameDto = gameService.findByTitle(title);
+        gameDto.setPrice(price);
+        gameService.update(gameDto);
+        resp.sendRedirect(GAMES);
 
-        } catch (GameWithSuchTitleAlreadyExistsException e) {
-            String message = e.getMessage();
-            req.setAttribute("message", message);
-            req.getRequestDispatcher(JspHelper.get("updateGame")).forward(req, resp);
-        }
     }
 }

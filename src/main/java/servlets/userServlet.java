@@ -31,7 +31,7 @@ public class userServlet extends HttpServlet {
                     new KeyDao(),
                     new GameMapper(),
                     new CreateGameMapper(),
-                    new UpdateGameMapper()));
+                    new UpdateGameMapper()),new CreatePurchaseMapper());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

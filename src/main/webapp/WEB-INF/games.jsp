@@ -88,7 +88,3 @@
 
 </body>
 </html>
-
-<%--<c:if test="${empty sessionScope.user}">--%>
-<%--    <c:redirect url="${pageContext.request.contextPath}/login"/>--%>
-<%--</c:if>--%>

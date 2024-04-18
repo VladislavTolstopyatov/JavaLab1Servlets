@@ -57,7 +57,6 @@ public class GameServiceTest {
         String title = gameDto.getTitle();
 
         when(gameDao.findByTitle(title)).thenReturn(game);
-        when(keyDao.findAllByTitle(title)).thenReturn(Collections.emptyList());
         when(gameMapper.map(game)).thenReturn(gameDto);
 
         assertThat(gameService.findByTitle(title)).isEqualTo(gameDto);

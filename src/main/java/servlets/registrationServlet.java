@@ -42,7 +42,7 @@ public class registrationServlet extends HttpServlet {
                     password,
                     0,
                     cardNumber,
-                    Role.ADMIN));
+                    Role.USER));
             resp.sendRedirect(req.getContextPath() + LOGIN);
         } catch (LoginAlreadyRegisteredException e) {
             String message = e.getMessage();

@@ -3,40 +3,55 @@ package services;
 import dao.GameDao;
 import dao.KeyDao;
 import dto.GameDto;
+import dto.KeyDto;
 import entities.Game;
+import entities.Key;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
+import mappers.CreateGameMapper;
 import mappers.GameMapper;
+import mappers.KeyMapper;
+import mappers.UpdateGameMapper;
 
 import java.util.List;
 
 public class GameService {
-    private final GameDao gameDao = new GameDao();
-    private final KeyDao keyDao = new KeyDao();
-    private final GameMapper gameMapper = new GameMapper();
+    private final GameDao gameDao;
+    private final KeyDao keyDao;
+    private final GameMapper gameMapper;
+    private final CreateGameMapper createGameMapper;
+    private final UpdateGameMapper updateGameMapper;
+
+
+    public GameService(GameDao gameDao, KeyDao keyDao, GameMapper gameMapper, CreateGameMapper createGameMapper, UpdateGameMapper updateGameMapper) {
+        this.gameDao = gameDao;
+        this.keyDao = keyDao;
+        this.gameMapper = gameMapper;
+        this.createGameMapper = createGameMapper;
+        this.updateGameMapper = updateGameMapper;
+    }
 
     public GameDto findById(Integer id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Id < 0!");
-        }
         return gameMapper.map(gameDao.findById(id));
     }
 
     public GameDto findByTitle(String title) {
-        if (title.isEmpty()) {
-            throw new IllegalArgumentException("title is empty!");
+        Game game = gameDao.findByTitle(title);
+        if (game != null) {
+            List<Key> keys = keyDao.findAllByTitle(title);
+            GameDto gameDto = gameMapper.map(game);
+            gameDto.setKeys(keys);
+            gameDto.setKeysCount(keys.size());
+            return gameDto;
         }
-        return gameMapper.map(gameDao.findByTitle(title));
+        return null;
     }
 
-    public Game createGame(GameDto gameDto) {
+    public Game createGame(GameDto gameDto) throws GameWithSuchTitleAlreadyExistsException {
         Game game;
         try {
-            game = gameDao.save(new Game(null, gameDto.getTitle(),
-                    gameDto.getDescription(),
-                    gameDto.getPrice(),
-                    gameDto.getDateOfRelease(), null));
+            game = gameDao.save(createGameMapper.map(gameDto));
         } catch (GameWithSuchTitleAlreadyExistsException e) {
-            throw new RuntimeException(e);
+            throw new GameWithSuchTitleAlreadyExistsException(e.getMessage());
         }
         return game;
     }
@@ -52,24 +67,18 @@ public class GameService {
     }
 
     public String findTitleById(Integer id) {
-        if (id <=0) {
-            throw new IllegalArgumentException("id<=0");
-        }
-        return gameDao.FindTitleById(id);
+        return gameDao.findTitleById(id);
     }
 
     public Integer findIdByTitle(String title) {
-        if (title.isEmpty()) {
-            throw new IllegalArgumentException("title is empty");
-        }
-        return gameDao.FindIdByTitle(title);
+        return gameDao.findIdByTitle(title);
     }
 
-    public void update(Game game) {
-        gameDao.update(game);
+    public void update(GameDto gameDto) {
+        gameDao.update(updateGameMapper.map(gameDto));
     }
 
-    public boolean delete(Integer id) {
+    public boolean deleteById(Integer id) {
         return gameDao.deleteById(id);
     }
 }

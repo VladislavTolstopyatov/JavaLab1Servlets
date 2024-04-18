@@ -5,13 +5,15 @@ import entities.Game;
 import java.time.LocalDate;
 
 public class PurchaseDto {
+    private Integer id;
     private LocalDate dateOfPurchase;
     private Integer promocodeid;
     private String gameTitle;
     private Integer userId;
     private String keyStr;
 
-    public PurchaseDto(LocalDate dateOfPurchase, Integer promocodeid, String gameTitle, Integer userId, String keyStr) {
+    public PurchaseDto(Integer id,LocalDate dateOfPurchase, Integer promocodeid, String gameTitle, Integer userId, String keyStr) {
+        this.id = id;
         this.dateOfPurchase = dateOfPurchase;
         this.promocodeid = promocodeid;
         this.gameTitle = gameTitle;
@@ -57,5 +59,13 @@ public class PurchaseDto {
 
     public void setKeyStr(String keyStr) {
         this.keyStr = keyStr;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

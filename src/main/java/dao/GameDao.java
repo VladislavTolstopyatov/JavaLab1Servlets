@@ -139,7 +139,7 @@ public class GameDao implements Dao<Integer, Game> {
         }
     }
 
-    public Integer FindIdByTitle(String title) {
+    public Integer findIdByTitle(String title) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ID_BY_TITLE)) {
             preparedStatement.setString(1,title);
@@ -157,7 +157,7 @@ public class GameDao implements Dao<Integer, Game> {
         return null;
     }
 
-    public String FindTitleById(Integer id) {
+    public String findTitleById(Integer id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_TITLE_BY_ID)) {
             preparedStatement.setInt(1, id);

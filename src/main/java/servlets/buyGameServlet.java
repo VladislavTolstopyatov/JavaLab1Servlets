@@ -30,10 +30,7 @@ public class buyGameServlet extends HttpServlet {
     private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper());
     private final PurchaseService purchaseService = new PurchaseService(new PurchaseDao(),
             new PurchaseMapper(),
-            new GameService(new GameDao(),
-                    new KeyDao(),
-                    new GameMapper(),
-                    new CreateGameMapper(), new UpdateGameMapper()));
+            new GameService(new GameDao(),new KeyDao(),new GameMapper(),new CreateGameMapper(),new UpdateGameMapper()), new CreatePurchaseMapper());
     private final KeyService keyService = new KeyService(new KeyDao(), new KeyMapper());
     private final GameService gameService = new GameService(new GameDao(), new KeyDao(), new GameMapper(),
             new CreateGameMapper(),
@@ -71,7 +68,7 @@ public class buyGameServlet extends HttpServlet {
             keyService.deleteById(key.getId());
 
             // фиксация покупки пользователя и добавление в бд
-            PurchaseDto purchaseDto = purchaseService.createPurchase(new PurchaseDto(LocalDate.now(),
+            PurchaseDto purchaseDto = purchaseService.createPurchase(new PurchaseDto(null, LocalDate.now(),
                     null, gameTitle, userDto.getId(), key.getKeyStr()));
 
             userDto.setPurchases(purchaseService.findByUserId(userDto.getId()));

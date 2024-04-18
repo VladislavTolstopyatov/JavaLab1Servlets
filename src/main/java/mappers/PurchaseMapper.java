@@ -11,7 +11,7 @@ public class PurchaseMapper {
             new CreateGameMapper(), new UpdateGameMapper());
 
     public PurchaseDto map(Purchase purchase) {
-        return new PurchaseDto(purchase.getDateOfPurchase(),
+        return new PurchaseDto(purchase.getId(), purchase.getDateOfPurchase(),
                 purchase.getPromocodeId(),
                 gameService.findTitleById(purchase.getGameId()),
                 purchase.getUserId(),
