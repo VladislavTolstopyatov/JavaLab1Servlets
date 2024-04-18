@@ -1,5 +1,6 @@
 package servlets;
 
+import dao.UserDao;
 import dto.CreateUserDto;
 import entities.Role;
 import entities.User;
@@ -9,6 +10,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mappers.CreateUserMapper;
+import mappers.UserMapper;
 import services.UserService;
 import util.JspHelper;
 
@@ -21,7 +24,7 @@ import static util.UrlPathUtil.REGISTRATION;
 
 @WebServlet(REGISTRATION)
 public class registrationServlet extends HttpServlet {
-    private static final UserService userService = new UserService();
+    private static final UserService userService = new UserService(new UserDao(),new UserMapper(), new CreateUserMapper());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,7 +42,7 @@ public class registrationServlet extends HttpServlet {
                     password,
                     0,
                     cardNumber,
-                    Role.USER));
+                    Role.ADMIN));
             resp.sendRedirect(req.getContextPath() + LOGIN);
         } catch (LoginAlreadyRegisteredException e) {
             String message = e.getMessage();

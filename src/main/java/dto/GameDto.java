@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class GameDto {
+    private Integer id;
     private String title;
     private String description;
     private double price;
@@ -13,13 +14,22 @@ public class GameDto {
     private List<Key> keys;
     private Integer keysCount;
 
-    public GameDto(String title, String description, double price, LocalDate dateOfRelease, List<Key> keys, Integer keysCount) {
+    public GameDto(Integer id, String title, String description, double price, LocalDate dateOfRelease, List<Key> keys, Integer keysCount) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.dateOfRelease = dateOfRelease;
         this.keys = keys;
         this.keysCount = keysCount;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {

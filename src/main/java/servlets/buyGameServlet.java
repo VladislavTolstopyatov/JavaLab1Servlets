@@ -1,16 +1,19 @@
 package servlets;
 
+import dao.GameDao;
+import dao.KeyDao;
+import dao.PurchaseDao;
+import dao.UserDao;
 import dto.KeyDto;
 import dto.PurchaseDto;
 import dto.UserDto;
-import entities.Key;
-import entities.Purchase;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import mappers.*;
 import services.GameService;
 import services.KeyService;
 import services.PurchaseService;
@@ -19,16 +22,22 @@ import util.JspHelper;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 import static util.UrlPathUtil.*;
 
 @WebServlet(BUYGAME)
 public class buyGameServlet extends HttpServlet {
-    private final UserService userService = new UserService();
-    private final PurchaseService purchaseService = new PurchaseService();
-    private final KeyService keyService = new KeyService();
-    private final GameService gameService = new GameService();
+    private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper());
+    private final PurchaseService purchaseService = new PurchaseService(new PurchaseDao(),
+            new PurchaseMapper(),
+            new GameService(new GameDao(),
+                    new KeyDao(),
+                    new GameMapper(),
+                    new CreateGameMapper(), new UpdateGameMapper()));
+    private final KeyService keyService = new KeyService(new KeyDao(), new KeyMapper());
+    private final GameService gameService = new GameService(new GameDao(), new KeyDao(), new GameMapper(),
+            new CreateGameMapper(),
+            new UpdateGameMapper());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,11 +58,6 @@ public class buyGameServlet extends HttpServlet {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         double gamePrice = (double) req.getSession().getAttribute("gamePrice");
         String gameTitle = (String) req.getSession().getAttribute("gameTitle");
-//                req.getParameter("gameTitle");
-
-        // Сохраняем параметры игры в сессии
-//        req.getSession().setAttribute("gamePrice", gamePrice);
-//        req.getSession().setAttribute("gameTitle", gameTitle);
 
         String message;
 
@@ -62,7 +66,9 @@ public class buyGameServlet extends HttpServlet {
 
             // получение ключа игры
             KeyDto key = keyService.findByGameId(gameService.findIdByTitle(gameTitle)).get(0);
-            // TODO надо удалить ключ или оставить, посмотрим
+
+            // удаление ключа из базы
+            keyService.deleteById(key.getId());
 
             // фиксация покупки пользователя и добавление в бд
             PurchaseDto purchaseDto = purchaseService.createPurchase(new PurchaseDto(LocalDate.now(),
@@ -71,7 +77,6 @@ public class buyGameServlet extends HttpServlet {
             userDto.setPurchases(purchaseService.findByUserId(userDto.getId()));
             req.setAttribute("userPurchases", userDto.getPurchases());
             req.getRequestDispatcher(JspHelper.get("userCabinet")).forward(req, resp);
-//            resp.sendRedirect(req.getContextPath() + USER);
         } else {
             // отрицательный исход покупки
             message = "Недостаточно средств на счете!";

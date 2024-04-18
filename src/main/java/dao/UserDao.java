@@ -150,7 +150,7 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    public User findByPassword(Integer password) {
+    public User findByPassword(String password) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_PASSWORD)) {

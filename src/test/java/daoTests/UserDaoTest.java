@@ -93,7 +93,7 @@ public class UserDaoTest {
     @Test
     void findByPasswordUserTest() throws LoginAlreadyRegisteredException {
         User user = userDao.save(new User(null, "logindel2", "hji", 0, "51512", Role.USER, null));
-        User userCheck = userDao.findByPassword(Objects.hash("hji"));
+        User userCheck = userDao.findByPassword("hji");
         assertEquals(user, userCheck);
         userDao.deleteById(userCheck.getId());
     }

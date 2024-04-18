@@ -6,7 +6,8 @@ import entities.Game;
 public class GameMapper implements Imapper<Game, GameDto> {
     @Override
     public GameDto map(Game game) {
-        return new GameDto(game.getTitle(),
+        return new GameDto(game.getId(),
+                game.getTitle(),
                 game.getDescription(),
                 game.getPrice(),
                 game.getDateOfRelease(),

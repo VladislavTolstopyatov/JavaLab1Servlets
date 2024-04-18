@@ -5,23 +5,28 @@ import dto.CreateUserDto;
 import dto.UserDto;
 import entities.User;
 import exceptions.LoginAlreadyRegisteredException;
+import mappers.CreateUserMapper;
 import mappers.UserMapper;
 
 import java.util.List;
 import java.util.Objects;
 
 public class UserService {
-    private final UserDao userDao = new UserDao();
-    private final UserMapper userMapper = new UserMapper();
+    private final UserDao userDao;
+    private final UserMapper userMapper;
+    private final CreateUserMapper createUserMapper;
 
-    List<UserDto> findAll() {
+    public UserService(UserDao userDao, UserMapper userMapper, CreateUserMapper createUserMapper) {
+        this.userDao = userDao;
+        this.userMapper = userMapper;
+        this.createUserMapper = createUserMapper;
+    }
+
+    public List<UserDto> findAll() {
         return userDao.findAll().stream().map(userMapper::map).toList();
     }
 
     public boolean deleteById(Integer id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("id <= 0!");
-        }
         return userDao.deleteById(id);
     }
 
@@ -47,12 +52,7 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto userDto) throws LoginAlreadyRegisteredException {
-        return userDao.save(new User(null,
-                userDto.getLogin(),
-                userDto.getPassword(),
-                userDto.getBalance(),
-                userDto.getCardNumber(),
-                userDto.getRole(), null));
+        return userDao.save(createUserMapper.map(userDto));
     }
 
     public void updateUser(User user) {
@@ -63,6 +63,6 @@ public class UserService {
         if (password.isEmpty()) {
             throw new IllegalArgumentException("password is empty!");
         }
-        return userMapper.map(userDao.findByPassword(Objects.hash(password)));
+        return userMapper.map(userDao.findByPassword((password)));
     }
 }

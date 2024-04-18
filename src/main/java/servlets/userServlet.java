@@ -1,14 +1,18 @@
 package servlets;
 
+import dao.GameDao;
+import dao.KeyDao;
+import dao.PurchaseDao;
+import dao.UserDao;
 import dto.PurchaseDto;
 import dto.UserDto;
-import entities.Purchase;
-import entities.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mappers.*;
+import services.GameService;
 import services.PurchaseService;
 import services.UserService;
 import util.JspHelper;
@@ -20,8 +24,14 @@ import static util.UrlPathUtil.USER;
 
 @WebServlet(USER)
 public class userServlet extends HttpServlet {
-    private final UserService userService = new UserService();
-    private final PurchaseService purchaseService = new PurchaseService();
+    private final UserService userService = new UserService(new UserDao(),new UserMapper(),new CreateUserMapper());
+    private final PurchaseService purchaseService = new PurchaseService(new PurchaseDao(),
+            new PurchaseMapper(),
+            new GameService(new GameDao(),
+                    new KeyDao(),
+                    new GameMapper(),
+                    new CreateGameMapper(),
+                    new UpdateGameMapper()));
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

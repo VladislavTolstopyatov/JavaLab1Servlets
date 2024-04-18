@@ -3,6 +3,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #936dd5;
 }
+
 p {
     font-family: 'Arial', sans-serif;
     font-size: 24px;
@@ -27,49 +28,49 @@ h1 {
 }
 
 h2 {
-    color: #000099; /* Цвет текста */
-    font-family: Arial, sans-serif; /* Шрифт */
-    font-size: 25px; /* Размер шрифта */
-    font-weight: bold; /* Жирность шрифта */
-    text-align: center; /* Выравнивание текста */
-    margin-top: 0px; /* Отступ сверху */
-    margin-bottom: 10px; /* Отступ снизу */
+    color: #000099;
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .game-item {
-    border: 2px solid #e4e4e4; /* Создание рамки */
-    border-radius: 10px; /* Скругление углов рамки */
-    padding: 10px; /* Внутренний отступ */
-    margin-bottom: 10px; /* Отступ снизу */
-    background-color: #f8f8f8; /* Фон элемента */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для элемента */
+    border: 2px solid #e4e4e4;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .game-item ul {
-    list-style-type: none; /* Удаление маркеров списка */
-    padding-left: 0; /* Удаление отступа слева */
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .game-item li {
-    font-family: "Public Sans", Verdana, sans-serif; /* Шрифт */
-    font-size: 18px; /* Размер шрифта */
-    color: DarkSlateGray; /* Цвет текста */
-    margin-bottom: 5px; /* Отступ между элементами списка */
+    font-family: "Public Sans", Verdana, sans-serif;
+    font-size: 18px;
+    color: DarkSlateGray;
+    margin-bottom: 5px;
 }
 
 .buy-button {
-    float: right; /* Выравнивание кнопки справа */
-    background-color: #4CAF50; /* Цвет фона */
-    color: #0a0808; /* Цвет текста */
-    padding: 10px 20px; /* Внутренний отступ */
-    border: none; /* Удаление границы */
-    cursor: pointer; /* Изменение курсора при наведении */
-    margin-top: 10px; /* Отступ сверху */
-    border-radius: 5px; /* Скругляет углы кнопки */
+    float: right;
+    background-color: #4CAF50;
+    color: #0a0808;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
 .buy-button:hover {
-    background-color: #1d2798; /* Изменение цвета фона при наведении */
+    background-color: #1d2798;
 }
 
 .auth-button-container {
@@ -97,9 +98,9 @@ h2 {
 }
 
 .profile-link {
-    text-align: center; /* Выравнивание текста по правому краю */
+    text-align: center;
     border: none;
-    padding: 10px; /* Отступ внутри рамки */
+    padding: 10px;
     margin-left: 80px;
     border-radius: 5px;
     background-color: #007bff;
@@ -107,3 +108,92 @@ h2 {
     cursor: pointer;
     color: white;
 }
+
+
+.search-container {
+    justify-content: left;
+    align-items: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    width: 150px;
+    border-radius: 5px;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+
+.change-button {
+    background-color: #0066A2;
+    color: white;
+    border-style: outset;
+    border-color: #0066A2;
+    height: 50px;
+    width: 100px;
+    font: bold 15px arial, sans-serif;
+    text-shadow: none;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.change-button:hover {
+    background: #B9DFFF;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+}
+
+.delete-button {
+    background-color: #a20000;
+    color: white;
+    border-style: outset;
+    border-color: #111213;
+    height: 50px;
+    width: 100px;
+    font: bold 15px arial, sans-serif;
+    text-shadow: none;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.delete-button:hover {
+    background: #B9DFFF;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+}
+
+.create-game-button-container {
+    text-align: center; /* Центрирование кнопки по горизонтали */
+    margin-top: 20px; /* Отступ сверху для добавления пространства перед кнопкой */
+}
+
+.create-game-button {
+    background-color: #0066A2; /* Синий фон */
+    color: white; /* Белый текст */
+    padding: 10px 20px; /* Отступы вокруг текста */
+    border: none; /* Удаление стандартной рамки */
+    border-radius: 5px; /* Скругление углов */
+    cursor: pointer; /* Изменение курсора на указатель при наведении */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+
+.create-game-button:hover {
+    background-color: #004d70; /* Темно-синий фон при наведении */
+}
+
+
+

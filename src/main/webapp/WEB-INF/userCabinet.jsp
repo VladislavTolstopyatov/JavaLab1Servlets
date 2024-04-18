@@ -25,7 +25,7 @@
                             <p>Дата покупки: <c:out value="${purchase.dateOfPurchase}"/></p>
                             <p>Игра: <c:out value="${purchase.gameTitle}"/></p>
                             <p>Ключ активации: <c:out value="${purchase.keyStr}"/></p>
-                            <p>Цена игры: <c:out value="${sessionScope.gamePrice}"/></p>
+<%--                            <p>Цена игры: <c:out value="${sessionScope.gamePrice}"/></p>--%>
                             <p class="thank-you">Спасибо за покупку, приятной игры!</p>
                         </li>
                     </ul>

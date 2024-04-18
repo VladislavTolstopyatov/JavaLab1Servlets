@@ -10,8 +10,13 @@ import mappers.PromocodeMapper;
 import java.util.List;
 
 public class PromocodeService {
-    private final PromocodeDao promocodeDao = new PromocodeDao();
-    private final PromocodeMapper promocodeMapper = new PromocodeMapper();
+    private final PromocodeDao promocodeDao;
+    private final PromocodeMapper promocodeMapper;
+
+    public PromocodeService(PromocodeDao promocodeDao, PromocodeMapper promocodeMapper) {
+        this.promocodeDao = promocodeDao;
+        this.promocodeMapper = promocodeMapper;
+    }
 
     public PromocodeDto findById(Integer id) {
         if (id <= 0) {

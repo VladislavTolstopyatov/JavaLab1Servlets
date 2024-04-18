@@ -1,10 +1,39 @@
+/* Общий стиль для формы */
+.update-game-form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
 body {
-    display: block;
-    position: relative;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
     background-color: #936dd5;
+}
+
+/* Стили для полей ввода */
+.update-game-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Стили для кнопки подтверждения */
+.submit-button {
+    background-color: #0066A2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #004d70;
 }
 
 h1 {
@@ -14,46 +43,7 @@ h1 {
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
-}
-
-.buy-game-form {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.buy-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: center;
-    display: block;
-    margin-top: 10px;
-}
-
-.buy-button:hover {
-    background-color: #45a049;
+    margin-left: 10px;
 }
 
 .games-button {

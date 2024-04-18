@@ -15,9 +15,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class PurchaseService {
-    private final PurchaseDao purchaseDao = new PurchaseDao();
-    private final PurchaseMapper purchaseMapper = new PurchaseMapper();
-    private final GameService gameService = new GameService();
+    private final PurchaseDao purchaseDao;
+    private final PurchaseMapper purchaseMapper;
+    private final GameService gameService;
+
+    public PurchaseService(PurchaseDao purchaseDao, PurchaseMapper purchaseMapper, GameService gameService) {
+        this.purchaseDao = purchaseDao;
+        this.purchaseMapper = purchaseMapper;
+        this.gameService = gameService;
+    }
 
     List<PurchaseDto> findAll() {
         return purchaseDao.findAll().stream().map(purchaseMapper::map).toList();

@@ -1,59 +1,53 @@
-body {
-    display: block;
-    position: relative;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    background-color: #936dd5;
-}
-
 h1 {
     color: #652020;
     font-family: Arial, sans-serif;
     font-size: 55px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     margin-top: 20px;
+    margin-left: 10px;
 }
 
-.buy-game-form {
-    width: 300px;
+body {
+    background-color: #936dd5;
+}
+
+.create-game-form {
+    width: 500px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
     border-radius: 5px;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
+.create-game-form label {
     display: block;
     margin-bottom: 5px;
 }
 
-.form-group input {
+.create-game-form input[type="text"],
+.create-game-form input[type="number"],
+.create-game-form textarea {
     width: 100%;
     padding: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
-.buy-button {
-    background-color: #4CAF50;
+.create-game-form button {
+    background-color: #0066A2;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
-    text-align: center;
-    display: block;
-    margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
-.buy-button:hover {
-    background-color: #45a049;
+.create-game-form button:hover {
+    background-color: #004d70;
 }
 
 .games-button {
