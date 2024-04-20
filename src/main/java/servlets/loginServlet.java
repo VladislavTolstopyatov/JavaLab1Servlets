@@ -2,13 +2,13 @@ package servlets;
 
 import dao.UserDao;
 import dto.UserDto;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mappers.CreateUserMapper;
+import mappers.UserDtoMapper;
 import mappers.UserMapper;
 import services.UserService;
 import util.JspHelper;
@@ -20,7 +20,7 @@ import static util.UrlPathUtil.*;
 
 @WebServlet(LOGIN)
 public class loginServlet extends HttpServlet {
-    private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper());
+    private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper(), new UserDtoMapper());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -32,8 +32,8 @@ public class PurchaseService {
 
 
     public PurchaseDto createPurchase(PurchaseDto purchaseDto) {
-        PurchaseDto purchaseDto1 = purchaseMapper.map(createPurchaseMapper.map(purchaseDto));
-        return purchaseDto1;
+        Purchase purchase = purchaseDao.save(createPurchaseMapper.map(purchaseDto));
+        return purchaseMapper.map(purchase);
     }
 
     public void updatePurchase(Purchase purchase) {

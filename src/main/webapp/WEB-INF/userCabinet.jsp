@@ -11,9 +11,9 @@
 <div class="user-profile">
     <div class="profile-info">
         <p>Личные данные</p>
-        <p>Логин: <span>${sessionScope.user.login}</span></p>
-        <p>Номер карты: <span>${sessionScope.user.cardNumber}</span></p>
-        <p>Денежный баланс: <span>${sessionScope.user.balance}</span></p>
+        <p>Логин: <span>${requestScope.user.login}</span></p>
+        <p>Номер карты: <span>${requestScope.user.cardNumber}</span></p>
+        <p>Денежный баланс: <span>${requestScope.user.balance}</span></p>
     </div>
     <div class="purchase-history">
         <h2>История покупок</h2>
@@ -25,7 +25,6 @@
                             <p>Дата покупки: <c:out value="${purchase.dateOfPurchase}"/></p>
                             <p>Игра: <c:out value="${purchase.gameTitle}"/></p>
                             <p>Ключ активации: <c:out value="${purchase.keyStr}"/></p>
-<%--                            <p>Цена игры: <c:out value="${sessionScope.gamePrice}"/></p>--%>
                             <p class="thank-you">Спасибо за покупку, приятной игры!</p>
                         </li>
                     </ul>

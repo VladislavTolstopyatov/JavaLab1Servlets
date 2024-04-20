@@ -6,20 +6,22 @@ import dto.UserDto;
 import entities.User;
 import exceptions.LoginAlreadyRegisteredException;
 import mappers.CreateUserMapper;
+import mappers.UserDtoMapper;
 import mappers.UserMapper;
 
 import java.util.List;
-import java.util.Objects;
 
 public class UserService {
     private final UserDao userDao;
     private final UserMapper userMapper;
     private final CreateUserMapper createUserMapper;
+    private final UserDtoMapper userDtoMapper;
 
-    public UserService(UserDao userDao, UserMapper userMapper, CreateUserMapper createUserMapper) {
+    public UserService(UserDao userDao, UserMapper userMapper, CreateUserMapper createUserMapper, UserDtoMapper userDtoMapper) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.createUserMapper = createUserMapper;
+        this.userDtoMapper = userDtoMapper;
     }
 
     public List<UserDto> findAll() {
@@ -55,8 +57,8 @@ public class UserService {
         return userDao.save(createUserMapper.map(userDto));
     }
 
-    public void updateUser(User user) {
-        userDao.update(user);
+    public void updateUser(UserDto userDto) {
+        userDao.update(userDtoMapper.map(userDto));
     }
 
     public UserDto findByPassword(String password) {
@@ -64,5 +66,9 @@ public class UserService {
             throw new IllegalArgumentException("password is empty!");
         }
         return userMapper.map(userDao.findByPassword((password)));
+    }
+
+    public UserDto findById(Integer id) {
+        return userMapper.map(userDao.findById(id));
     }
 }

@@ -19,7 +19,7 @@ import static util.UrlPathUtil.GAMES;
 
 @WebServlet(DELETE_GAME)
 public class deleteGameServlet extends HttpServlet {
-    private GameService gameService = new GameService(new GameDao(),
+    private final GameService gameService = new GameService(new GameDao(),
             new KeyDao(),
             new GameMapper(),
             new CreateGameMapper(),

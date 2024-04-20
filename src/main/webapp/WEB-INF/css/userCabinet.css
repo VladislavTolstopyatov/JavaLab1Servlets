@@ -3,7 +3,7 @@ body {
     background-color: #b7cbb6;
     margin: 0;
     padding: 0;
-    color: #333; /* Добавлено для улучшения читаемости текста */
+    color: #333;
 }
 
 .user-profile {
@@ -13,7 +13,7 @@ body {
     background-color: #dde7d8;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    border-radius: 5px; /* Добавлено скругление углов для блока профиля */
+    border-radius: 5px;
 }
 
 .profile-info {
@@ -26,11 +26,11 @@ body {
 .profile-info p {
     margin: 0;
     padding: 5px 0;
-    font-size: 18px; /* Уменьшен размер шрифта для улучшения читаемости */
+    font-size: 18px;
 }
 
 .profile-info p:first-child {
-    font-weight: bold; /* Выделение первого элемента для лучшей визуальной разметки */
+    font-weight: bold;
 }
 
 .purchase-history {
@@ -48,7 +48,7 @@ body {
     font-size: 16px;
     border-radius: 5px;
     text-decoration: none;
-    transition: background-color 0.3s ease; /* Добавлено плавное изменение цвета */
+    transition: background-color 0.3s ease;
 }
 
 .games-button:hover {
@@ -79,15 +79,14 @@ body {
     margin-top: 5px;
 }
 
-/* Добавленные стили для улучшения визуального восприятия */
 .profile-info, .purchase-history {
-    box-sizing: border-box; /* Улучшает расчет размеров элементов */
+    box-sizing: border-box;
 }
 
 .profile-info p {
-    margin-bottom: 10px; /* Увеличен отступ снизу для улучшения читаемости */
+    margin-bottom: 10px;
 }
 
 .profile-info p:last-child {
-    margin-bottom: 0; /* Удален отступ снизу для последнего элемента */
+    margin-bottom: 0;
 }

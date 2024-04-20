@@ -21,7 +21,7 @@ import static util.UrlPathUtil.UPDATE_GAME;
 
 @WebServlet(UPDATE_GAME)
 public class updateGameServlet extends HttpServlet {
-    private GameService gameService = new GameService(new GameDao(),
+    private final GameService gameService = new GameService(new GameDao(),
             new KeyDao(),
             new GameMapper(),
             new CreateGameMapper(),

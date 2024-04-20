@@ -25,13 +25,13 @@ import java.time.LocalDate;
 
 import static util.UrlPathUtil.*;
 
-@WebServlet(BUYGAME)
+@WebServlet(BUY_GAME)
 public class buyGameServlet extends HttpServlet {
-    private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper());
+    private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper(), new UserDtoMapper());
     private final PurchaseService purchaseService = new PurchaseService(new PurchaseDao(),
             new PurchaseMapper(),
-            new GameService(new GameDao(),new KeyDao(),new GameMapper(),new CreateGameMapper(),new UpdateGameMapper()), new CreatePurchaseMapper());
-    private final KeyService keyService = new KeyService(new KeyDao(), new KeyMapper());
+            new GameService(new GameDao(), new KeyDao(), new GameMapper(), new CreateGameMapper(), new UpdateGameMapper()), new CreatePurchaseMapper());
+    private final KeyService keyService = new KeyService(new KeyDao(), new KeyMapper(), new CreateKeyMapper());
     private final GameService gameService = new GameService(new GameDao(), new KeyDao(), new GameMapper(),
             new CreateGameMapper(),
             new UpdateGameMapper());
@@ -68,11 +68,16 @@ public class buyGameServlet extends HttpServlet {
             keyService.deleteById(key.getId());
 
             // фиксация покупки пользователя и добавление в бд
-            PurchaseDto purchaseDto = purchaseService.createPurchase(new PurchaseDto(null, LocalDate.now(),
-                    null, gameTitle, userDto.getId(), key.getKeyStr()));
+            PurchaseDto purchaseDto = new PurchaseDto(null, LocalDate.now(), null, gameTitle, userDto.getId(), key.getKeyStr());
+            purchaseService.createPurchase(purchaseDto);
+
+            // списание денег
+            userDto.setBalance(userDto.getBalance() - gamePrice);
+            userService.updateUser(userDto);
 
             userDto.setPurchases(purchaseService.findByUserId(userDto.getId()));
             req.setAttribute("userPurchases", userDto.getPurchases());
+            req.setAttribute("user", userDto);
             req.getRequestDispatcher(JspHelper.get("userCabinet")).forward(req, resp);
         } else {
             // отрицательный исход покупки

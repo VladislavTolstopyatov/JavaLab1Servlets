@@ -5,7 +5,7 @@
 <head>
     <title>Games</title>
     <style>
-        <%@include file="/WEB-INF/css/style.css" %>
+        <%@include file="/WEB-INF/css/games.css" %>
     </style>
 </head>
 <body>
@@ -27,10 +27,16 @@
                     <li>Дата релиза: <c:out value="${game.dateOfRelease}"/></li>
                     <li>Осталось ключей: <c:out value="${game.keysCount}"/></li>
                 </ul>
+                <c:if test="${sessionScope.user.role == 'ADMIN'}">
+                <form action="${pageContext.request.contextPath}/getAllKeys" method="get">
+                    <button type="submit" class="getAll-button" name="title" value="${game.title}">Список
+                        ключей
+                    </button>
+                </form>
+                </c:if>
                 <c:choose>
                     <c:when test="${fn:length(game.keys) > 0}">
                         <form action="${pageContext.request.contextPath}/buyGame" method="get">
-                                <%--                            <input type="hidden" name="userId" value="${sessionScope.user.id}" />--%>
                             <input type="hidden" name="gameTitle" value="${game.title}"/>
                             <input type="hidden" name="gamePrice" value="${game.price}"/>
                             <button type="submit" class="buy-button" role="button">Купить</button>
@@ -72,6 +78,7 @@
         </c:when>
         <c:otherwise>
             <!-- Если пользователь не авторизован, показываем кнопку "Авторизоваться" -->
+            <!-- в итоге не реализовано -->
             <form action="${pageContext.request.contextPath}/login" method="post">
                 <input type="submit" value="Авторизоваться" class="auth-button"/>
             </form>

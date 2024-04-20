@@ -32,8 +32,8 @@
             <c:choose>
                 <c:when test="${fn:length(game.keys) > 0}">
                     <form action="${pageContext.request.contextPath}/buyGame" method="get">
-                        <input type="hidden" name="gameTitle" value="${game.title}" />
-                        <input type="hidden" name="gamePrice" value="${game.price}" />
+                        <input type="hidden" name="gameTitle" value="${game.title}"/>
+                        <input type="hidden" name="gamePrice" value="${game.price}"/>
                         <button type="submit" class="buy-button" role="button">Купить</button>
                     </form>
                 </c:when>
@@ -42,6 +42,19 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        <c:if test="${sessionScope.user.role == 'ADMIN'}">
+            <form action="${pageContext.request.contextPath}/getAllKeys" method="get">
+                <button type="submit" class="getAll-button" name="title" value="${game.title}">Список
+                    ключей
+                </button>
+            </form>
+            <form action="${pageContext.request.contextPath}/updateGame" method="get">
+                <button type="submit" class="change-button" name="title" value="${game.title}">Изменить</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/deleteGame" method="get">
+                <button type="submit" class="delete-button" name="title" value="${game.title}">Удалить</button>
+            </form>
+        </c:if>
     </c:if>
 </div>
 

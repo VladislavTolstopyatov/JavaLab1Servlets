@@ -8,10 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import mappers.CreateGameMapper;
-import mappers.GameMapper;
-import mappers.KeyMapper;
-import mappers.UpdateGameMapper;
+import mappers.*;
 import services.GameService;
 import services.KeyService;
 import util.JspHelper;
@@ -28,7 +25,7 @@ public class gamesServlet extends HttpServlet {
             new GameMapper(),
             new CreateGameMapper(),
             new UpdateGameMapper());
-    private final KeyService keyService = new KeyService(new KeyDao(),new KeyMapper());
+    private final KeyService keyService = new KeyService(new KeyDao(),new KeyMapper(),new CreateKeyMapper());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<GameDto> games = gameService.getAll();

@@ -125,3 +125,35 @@ h1 {
 .buy-button:hover {
     background-color: #1d2798;
 }
+
+.change-button, .delete-button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.4s; /* Плавный переход цвета фона */
+}
+
+/* Стили для кнопки "Изменить" */
+.change-button {
+    background-color: #4CAF50; /* Зеленый */
+}
+
+.change-button:hover {
+    background-color: #46a04a; /* Темно-зеленый при наведении */
+}
+
+/* Стили для кнопки "Удалить" */
+.delete-button {
+    background-color: #F44336; /* Красный */
+}
+
+.delete-button:hover {
+    background-color: #f21c0d; /* Темно-красный при наведении */
+}

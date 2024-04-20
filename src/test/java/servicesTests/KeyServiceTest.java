@@ -7,6 +7,7 @@ import dto.UserDto;
 import entities.Game;
 import entities.Key;
 import entities.User;
+import mappers.CreateKeyMapper;
 import mappers.KeyMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ public class KeyServiceTest {
     KeyDao keyDao;
     @Mock
     KeyMapper keyMapper;
+    @Mock
+    CreateKeyMapper createKeyMapper;
 
 
     @Test
@@ -160,9 +163,11 @@ public class KeyServiceTest {
         Key key = getKey();
         KeyDto keyDto = getKeyDto();
 
+        when(createKeyMapper.map(keyDto)).thenReturn(key);
         when(keyDao.save(key)).thenReturn(key);
 
-        assertThat(keyService.createKey(key)).isEqualTo(key);
+
+        assertThat(keyService.createKey(keyDto)).isEqualTo(key);
     }
 
 
@@ -184,6 +189,7 @@ public class KeyServiceTest {
 
     private static KeyDto getKeyDto() {
         return new KeyDto(1,
+                "test",
                 "test");
     }
 }

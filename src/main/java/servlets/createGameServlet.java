@@ -23,7 +23,7 @@ import static util.UrlPathUtil.GAMES;
 
 @WebServlet(CREATE_GAME)
 public class createGameServlet extends HttpServlet {
-    private GameService gameService = new GameService(new GameDao(),
+    private final GameService gameService = new GameService(new GameDao(),
             new KeyDao(),
             new GameMapper(),
             new CreateGameMapper(),
@@ -39,9 +39,9 @@ public class createGameServlet extends HttpServlet {
         String title = req.getParameter("gameTitle");
         String description = req.getParameter("gameDescription");
         Double price = Double.valueOf(req.getParameter("gamePrice"));
-        LocalDate dateOfRelease = LocalDate.parse(req.getParameter("releaseDate"));
+        String dateOfRelease = req.getParameter("releaseDate");
 
-        if (dateOfRelease.getYear() > LocalDate.now().getYear()) {
+        if (dateOfRelease.length() > 10) {
             String message = "Некорректный год релиза!";
             req.setAttribute("message", message);
             doGet(req, resp);

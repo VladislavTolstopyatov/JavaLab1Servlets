@@ -1,4 +1,5 @@
 package servlets;
+
 import dao.GameDao;
 import dao.KeyDao;
 import dto.GameDto;
@@ -24,6 +25,7 @@ public class findGameByTitleServlet extends HttpServlet {
             new GameMapper(),
             new CreateGameMapper(),
             new UpdateGameMapper());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher(JspHelper.get("findGame")).forward(req, resp);
@@ -32,9 +34,12 @@ public class findGameByTitleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String gameTitle = req.getParameter("gameName");
-        GameDto gameDto = null;
-        gameDto = gameService.findByTitle(gameTitle);
-        req.setAttribute("game", gameDto);
+        GameDto gameDto = gameService.findByTitle(gameTitle);
+        if (gameDto != null) {
+            req.setAttribute("game", gameDto);
+        } else {
+            req.setAttribute("message","Игра не найдена");
+        }
         req.getRequestDispatcher(JspHelper.get("findGame")).forward(req, resp);
     }
 }

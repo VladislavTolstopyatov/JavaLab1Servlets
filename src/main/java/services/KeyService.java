@@ -2,9 +2,8 @@ package services;
 
 import dao.KeyDao;
 import dto.KeyDto;
-import entities.Game;
 import entities.Key;
-import entities.Promocode;
+import mappers.CreateKeyMapper;
 import mappers.KeyMapper;
 
 import java.util.List;
@@ -13,9 +12,12 @@ public class KeyService {
     private final KeyDao keyDao;
     private final KeyMapper keyMapper;
 
-    public KeyService(KeyDao keyDao, KeyMapper keyMapper) {
+    private final CreateKeyMapper createKeyMapper;
+
+    public KeyService(KeyDao keyDao, KeyMapper keyMapper, CreateKeyMapper createKeyMapper) {
         this.keyDao = keyDao;
         this.keyMapper = keyMapper;
+        this.createKeyMapper = createKeyMapper;
     }
 
     public KeyDto findById(Integer id) {
@@ -34,7 +36,8 @@ public class KeyService {
         keyDao.update(key);
     }
 
-    public Key createKey(Key key) {
+    public Key createKey(KeyDto keyDto) {
+        Key key = createKeyMapper.map(keyDto);
         return keyDao.save(key);
     }
 
