@@ -106,7 +106,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginAndPasswordWhenUserNotExists() throws LoginAlreadyRegisteredException {
+    void findByLoginAndPasswordWhenUserNotExists() {
         User user = getUser();
         String login = user.getLogin();
         String password = user.getPassword();
@@ -115,14 +115,14 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteByLoginWhenUserNotFound() throws LoginAlreadyRegisteredException {
+    void deleteByLoginWhenUserNotFound() {
         String login = "login";
         when(userDao.deleteByLogin(login)).thenReturn(false);
         assertThat(userService.deleteByLogin(login)).isEqualTo(false);
     }
 
     @Test
-    void deleteByLoginWhenUserFound() throws LoginAlreadyRegisteredException {
+    void deleteByLoginWhenUserFound() {
         String login = "login";
         when(userDao.deleteByLogin(login)).thenReturn(true);
         assertThat(userService.deleteByLogin(login)).isEqualTo(true);
@@ -141,7 +141,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginAndPasswordWhenUserNotFound() throws LoginAlreadyRegisteredException {
+    void findByLoginAndPasswordWhenUserNotFound() {
         User user = getUser();
         String password = user.getPassword();
         when(userDao.findByPassword(password)).thenReturn(null);

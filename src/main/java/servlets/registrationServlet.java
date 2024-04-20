@@ -13,8 +13,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import mappers.CreateUserMapper;
 import mappers.UserDtoMapper;
 import mappers.UserMapper;
+import org.mindrot.jbcrypt.BCrypt;
 import services.UserService;
 import util.JspHelper;
+import util.PasswordHasher;
 
 import java.io.IOException;
 
@@ -27,6 +29,7 @@ public class registrationServlet extends HttpServlet {
             new UserMapper(),
             new CreateUserMapper(),
             new UserDtoMapper());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher(JspHelper.get("registration")).forward(req, resp);
@@ -40,12 +43,12 @@ public class registrationServlet extends HttpServlet {
 
         try {
             User user = userService.createUser(new CreateUserDto(login,
-                    password,
+                    PasswordHasher.md5(password),
                     0,
                     cardNumber,
                     Role.ADMIN));
             resp.sendRedirect(req.getContextPath() + LOGIN);
-        } catch (LoginAlreadyRegisteredException e) {
+        } catch (LoginAlreadyRegisteredException | Exception e) {
             String message = e.getMessage();
             req.setAttribute("message", message);
             req.getRequestDispatcher(JspHelper.get("registration")).forward(req, resp);
