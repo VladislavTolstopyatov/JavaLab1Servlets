@@ -7,6 +7,7 @@ import dto.PurchaseDto;
 import entities.Game;
 import entities.Key;
 import entities.Purchase;
+import exceptions.DataBaseException;
 import mappers.CreatePurchaseMapper;
 import mappers.PurchaseMapper;
 import org.assertj.core.api.Assertions;
@@ -37,7 +38,7 @@ public class PurchaseServiceTest {
     CreatePurchaseMapper createPurchaseMapper;
 
     @Test
-    public void findByIdWhenPurchaseExists() {
+    public void findByIdWhenPurchaseExists() throws DataBaseException {
         Purchase purchase = getPurchase();
         PurchaseDto purchaseDto = getPurchaseDto();
 
@@ -50,7 +51,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    public void findByIdWhenPurchaseNotExists() {
+    public void findByIdWhenPurchaseNotExists() throws DataBaseException {
         PurchaseDto purchaseDto = getPurchaseDto();
         Integer id = purchaseDto.getId();
 
@@ -59,7 +60,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    public void findAllWhenPurchasesExists() {
+    public void findAllWhenPurchasesExists() throws DataBaseException {
         Purchase purchase = getPurchase();
         List<Purchase> purchases = List.of(purchase);
         PurchaseDto purchaseDto = getPurchaseDto();
@@ -76,7 +77,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    public void findAllWhenPurchasesNotExists() {
+    public void findAllWhenPurchasesNotExists() throws DataBaseException {
         when(purchaseDao.findAll())
                 .thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class,
@@ -84,7 +85,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void createPurchase() {
+    void createPurchase() throws DataBaseException {
         Purchase purchase = getPurchase();
         PurchaseDto purchaseDto = getPurchaseDto();
         Integer id = purchaseDto.getId();
@@ -96,7 +97,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByGameIdWhenPurchasesExists() {
+    void findAllByGameIdWhenPurchasesExists() throws DataBaseException {
         Purchase purchase = getPurchase();
         List<Purchase> purchases = List.of(purchase);
         PurchaseDto purchaseDto = getPurchaseDto();
@@ -115,7 +116,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByGameIdWhenPurchasesNotExists() {
+    void findAllByGameIdWhenPurchasesNotExists() throws DataBaseException {
         Integer id = getPurchase().getId();
         when(purchaseDao.findAllByGameID(id))
                 .thenReturn(null);
@@ -124,7 +125,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByUserIdWhenPurchasesExists() {
+    void findAllByUserIdWhenPurchasesExists() throws DataBaseException {
         Purchase purchase = getPurchase();
         List<Purchase> purchases = List.of(purchase);
         PurchaseDto purchaseDto = getPurchaseDto();
@@ -143,7 +144,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByUserIdWhenPurchasesNotExists() {
+    void findAllByUserIdWhenPurchasesNotExists() throws DataBaseException {
         Integer id = getPurchaseDto().getUserId();
         when(purchaseDao.findAllByUserID(id))
                 .thenReturn(null);
@@ -152,7 +153,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByDateWhenPurchasesExists() {
+    void findAllByDateWhenPurchasesExists() throws DataBaseException {
         Purchase purchase = getPurchase();
         List<Purchase> purchases = List.of(purchase);
         PurchaseDto purchaseDto = getPurchaseDto();
@@ -171,7 +172,7 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void findAllByDatedWhenPurchasesNotExists() {
+    void findAllByDatedWhenPurchasesNotExists() throws DataBaseException {
         LocalDate localDate = getPurchaseDto().getDateOfPurchase();
         when(purchaseDao.findAllByPurchaseDate(localDate))
                 .thenReturn(null);
@@ -180,14 +181,14 @@ public class PurchaseServiceTest {
     }
 
     @Test
-    void deleteByIdWhenGameExists() {
+    void deleteByIdWhenGameExists() throws DataBaseException {
         Integer id = 1;
         when(purchaseDao.deleteById(id)).thenReturn(true);
         Assertions.assertThat(purchaseService.deleteById(id)).isEqualTo(true);
     }
 
     @Test
-    void deleteByIdWhenGameNotExists() {
+    void deleteByIdWhenGameNotExists() throws DataBaseException {
         Integer id = 1;
         when(purchaseDao.deleteById(id)).thenReturn(false);
         Assertions.assertThat(purchaseService.deleteById(id)).isEqualTo(false);

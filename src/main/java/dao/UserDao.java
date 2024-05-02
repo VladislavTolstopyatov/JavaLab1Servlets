@@ -2,7 +2,9 @@ package dao;
 
 import entities.Role;
 import entities.User;
+import exceptions.DataBaseException;
 import exceptions.LoginAlreadyRegisteredException;
+import org.apache.log4j.Logger;
 import util.ConnectionManager;
 
 import java.sql.*;
@@ -10,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao implements Dao<Integer, User> {
-
-    private final String LOGIN_ALREADY_REGISTERED_MSG = "Пользователь с таким логином уже зарегистрирован!";
-    //private static final UserDao INSTANCE = new UserDao();
+    private static final ConnectionManager connectionManager = new ConnectionManager();
+    private static final String LOGIN_ALREADY_REGISTERED_MSG = "Пользователь с таким логином уже зарегистрирован!";
+    private static final Logger logger = Logger.getLogger(UserDao.class);
 
     private static final String FIND_BY_LOGIN_SQL = """
             SELECT user_id, login, user_password, user_role, balance, card_number
@@ -66,13 +68,13 @@ public class UserDao implements Dao<Integer, User> {
 
 
     @Override
-    public User save(User user) throws LoginAlreadyRegisteredException {
+    public User save(User user) throws LoginAlreadyRegisteredException, DataBaseException {
 
         User userCheck = findByLogin(user.getLogin());
         if (userCheck != null) {
             throw new LoginAlreadyRegisteredException(LOGIN_ALREADY_REGISTERED_MSG);
         }
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, user.getLogin());
@@ -87,14 +89,15 @@ public class UserDao implements Dao<Integer, User> {
             }
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public User findById(Integer id) {
+    public User findById(Integer id) throws DataBaseException {
         User user = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -103,13 +106,14 @@ public class UserDao implements Dao<Integer, User> {
             }
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public List<User> findAll() {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<User> findAll() throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> result = new ArrayList<>();
@@ -118,25 +122,27 @@ public class UserDao implements Dao<Integer, User> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public void update(User user) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public void update(User user) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setObject(1, user.getBalance());
             preparedStatement.setObject(2, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public User findByLogin(String login) {
+    public User findByLogin(String login) throws DataBaseException {
         User user = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_LOGIN_SQL)) {
 
             preparedStatement.setObject(1, login);
@@ -146,13 +152,14 @@ public class UserDao implements Dao<Integer, User> {
             }
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public User findByPassword(String password) {
+    public User findByPassword(String password) throws DataBaseException {
         User user = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_PASSWORD)) {
 
             preparedStatement.setObject(1, password);
@@ -162,37 +169,40 @@ public class UserDao implements Dao<Integer, User> {
             }
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
 
     @Override
-    public boolean deleteById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public boolean deleteById(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID)) {
             preparedStatement.setObject(1, id);
             int executeUpdate = preparedStatement.executeUpdate();
             return executeUpdate > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public boolean deleteByLogin(String login) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public boolean deleteByLogin(String login) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_LOGIN)) {
             preparedStatement.setObject(1, login);
             int executeUpdate = preparedStatement.executeUpdate();
             return executeUpdate > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public User findByLoginAndPassword(String login, String password) {
+    public User findByLoginAndPassword(String login, String password) throws DataBaseException {
         User user = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMAIL_AND_PASSWORD)) {
 
             preparedStatement.setObject(1, login);
@@ -204,7 +214,8 @@ public class UserDao implements Dao<Integer, User> {
             }
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 

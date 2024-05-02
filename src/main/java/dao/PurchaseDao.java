@@ -1,6 +1,8 @@
 package dao;
 
 import entities.Purchase;
+import exceptions.DataBaseException;
+import org.apache.log4j.Logger;
 import util.ConnectionManager;
 import util.TimeUtils;
 
@@ -10,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseDao implements Dao<Integer, Purchase> {
-
+    private static final ConnectionManager connectionManager = new ConnectionManager();
+    private static final Logger logger = Logger.getLogger(PurchaseDao.class);
     private static final String FIND_ALL_PURCHASES = """
             SELECT purchase_id, purchase_date, promocode_id, user_id, game_id, keyStr
             FROM purchases
@@ -56,8 +59,8 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
 
 
     @Override
-    public Purchase save(Purchase purchase) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public Purchase save(Purchase purchase) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, purchase.getDateOfPurchase());
@@ -73,13 +76,14 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return purchase;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public Purchase findById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public Purchase findById(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_PURCHASE_BY_ID)) {
             preparedStatement.setObject(1, id);
 
@@ -90,13 +94,14 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return purchase;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public List<Purchase> findAll() {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Purchase> findAll() throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_PURCHASES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Purchase> result = new ArrayList<>();
@@ -105,12 +110,13 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public List<Purchase> findAllByGameID(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Purchase> findAllByGameID(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_ID)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -120,12 +126,13 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public List<Purchase> findAllByUserID(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Purchase> findAllByUserID(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USER_ID)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -135,12 +142,12 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public List<Purchase> findAllByPurchaseDate(LocalDate localDate) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Purchase> findAllByPurchaseDate(LocalDate localDate) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_PURCHASE_DATE)) {
             preparedStatement.setObject(1, localDate);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -150,13 +157,14 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public void update(Purchase purchase) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public void update(Purchase purchase) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setObject(1, purchase.getDateOfPurchase());
             preparedStatement.setObject(2, purchase.getPromocodeId());
@@ -164,19 +172,21 @@ public class PurchaseDao implements Dao<Integer, Purchase> {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public boolean deleteById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public boolean deleteById(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
             preparedStatement.setObject(1, id);
             int executeUpdate = preparedStatement.executeUpdate();
             return executeUpdate > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 

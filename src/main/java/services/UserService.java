@@ -4,6 +4,7 @@ import dao.UserDao;
 import dto.CreateUserDto;
 import dto.UserDto;
 import entities.User;
+import exceptions.DataBaseException;
 import exceptions.LoginAlreadyRegisteredException;
 import mappers.CreateUserMapper;
 import mappers.UserDtoMapper;
@@ -24,51 +25,52 @@ public class UserService {
         this.userDtoMapper = userDtoMapper;
     }
 
-    public List<UserDto> findAll() {
+    public List<UserDto> findAll() throws DataBaseException {
         return userDao.findAll().stream().map(userMapper::map).toList();
     }
 
-    public boolean deleteById(Integer id) {
+    public boolean deleteById(Integer id) throws DataBaseException {
         return userDao.deleteById(id);
     }
 
-    public UserDto findByLogin(String login) {
-        if (login.isEmpty()) {
-            throw new IllegalArgumentException("login is empty!");
-        }
+    public UserDto findByLogin(String login) throws DataBaseException {
         return userMapper.map(userDao.findByLogin(login));
     }
 
-    public UserDto findByLoginAndPassword(String login, String password) {
+    public UserDto findByLoginAndPassword(String login, String password) throws DataBaseException, Exception {
         if (login.isEmpty() || password.isEmpty()) {
             return null;
         }
-        return userMapper.map(userDao.findByLoginAndPassword(login, password));
+        User user = userDao.findByLoginAndPassword(login, password);
+        if (user == null) {
+            throw new Exception("user not found");
+        }
+        return userMapper.map(user);
     }
 
-    public boolean deleteByLogin(String login) {
+    public boolean deleteByLogin(String login) throws DataBaseException {
         if (login.isEmpty()) {
             throw new IllegalArgumentException("login is empty");
         }
         return userDao.deleteByLogin(login);
     }
 
-    public User createUser(CreateUserDto userDto) throws LoginAlreadyRegisteredException {
+    public User createUser(CreateUserDto userDto) throws LoginAlreadyRegisteredException, DataBaseException {
         return userDao.save(createUserMapper.map(userDto));
     }
 
-    public void updateUser(UserDto userDto) {
+    public void updateUser(UserDto userDto) throws DataBaseException {
         userDao.update(userDtoMapper.map(userDto));
     }
 
-    public UserDto findByPassword(String password) {
+    public UserDto findByPassword(String password) throws DataBaseException {
         if (password.isEmpty()) {
             throw new IllegalArgumentException("password is empty!");
         }
         return userMapper.map(userDao.findByPassword((password)));
     }
 
-    public UserDto findById(Integer id) {
+    public UserDto findById(Integer id) throws DataBaseException {
         return userMapper.map(userDao.findById(id));
     }
 }

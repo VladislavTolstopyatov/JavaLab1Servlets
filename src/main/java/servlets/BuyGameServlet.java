@@ -7,6 +7,7 @@ import dao.UserDao;
 import dto.KeyDto;
 import dto.PurchaseDto;
 import dto.UserDto;
+import exceptions.DataBaseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import mappers.*;
+import org.apache.log4j.Logger;
 import services.GameService;
 import services.KeyService;
 import services.PurchaseService;
@@ -26,7 +28,8 @@ import java.time.LocalDate;
 import static util.UrlPathUtil.*;
 
 @WebServlet(BUY_GAME)
-public class buyGameServlet extends HttpServlet {
+public class BuyGameServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(BuyGameServlet.class);
     private final UserService userService = new UserService(new UserDao(), new UserMapper(), new CreateUserMapper(), new UserDtoMapper());
     private final PurchaseService purchaseService = new PurchaseService(new PurchaseDao(),
             new PurchaseMapper(),
@@ -60,25 +63,30 @@ public class buyGameServlet extends HttpServlet {
 
         // положительный исход покупки
         if (userDto.getBalance() - gamePrice > 0) {
+            try {
+                // получение ключа игры
+                KeyDto key = keyService.findByGameId(gameService.findIdByTitle(gameTitle)).get(0);
 
-            // получение ключа игры
-            KeyDto key = keyService.findByGameId(gameService.findIdByTitle(gameTitle)).get(0);
+                // удаление ключа из базы
+                keyService.deleteById(key.getId());
 
-            // удаление ключа из базы
-            keyService.deleteById(key.getId());
+                // фиксация покупки пользователя и добавление в бд
+                PurchaseDto purchaseDto = new PurchaseDto(null, LocalDate.now(), null, gameTitle, userDto.getId(), key.getKeyStr());
+                purchaseService.createPurchase(purchaseDto);
 
-            // фиксация покупки пользователя и добавление в бд
-            PurchaseDto purchaseDto = new PurchaseDto(null, LocalDate.now(), null, gameTitle, userDto.getId(), key.getKeyStr());
-            purchaseService.createPurchase(purchaseDto);
+                // списание денег
+                userDto.setBalance(userDto.getBalance() - gamePrice);
+                userService.updateUser(userDto);
 
-            // списание денег
-            userDto.setBalance(userDto.getBalance() - gamePrice);
-            userService.updateUser(userDto);
-
-            userDto.setPurchases(purchaseService.findByUserId(userDto.getId()));
-            req.setAttribute("userPurchases", userDto.getPurchases());
-            req.setAttribute("user", userDto);
-            req.getRequestDispatcher(JspHelper.get("userCabinet")).forward(req, resp);
+                userDto.setPurchases(purchaseService.findByUserId(userDto.getId()));
+                req.setAttribute("userPurchases", userDto.getPurchases());
+                req.setAttribute("user", userDto);
+                req.getRequestDispatcher(JspHelper.get("userCabinet")).forward(req, resp);
+            } catch (DataBaseException e) {
+                logger.error(e.getMessage());
+                req.setAttribute("error",e.getMessage());
+                req.getRequestDispatcher(JspHelper.get("userCabinet")).forward(req, resp);
+            }
         } else {
             // отрицательный исход покупки
             message = "Недостаточно средств на счете!";

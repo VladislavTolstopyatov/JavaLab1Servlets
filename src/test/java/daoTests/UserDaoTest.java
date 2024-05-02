@@ -3,6 +3,7 @@ package daoTests;
 import dao.UserDao;
 import entities.Role;
 import entities.User;
+import exceptions.DataBaseException;
 import exceptions.LoginAlreadyRegisteredException;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ public class UserDaoTest {
     UserDao userDao = new UserDao();
 
     @Test
-    void saveUserTest() throws LoginAlreadyRegisteredException {
+    void saveUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = new User(null, "testLogin","password", 50, "88005553535", Role.USER, null);
 
         User userFromDao = userDao.save(user);
@@ -34,7 +35,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void findByIdUserTest() throws LoginAlreadyRegisteredException {
+    void findByIdUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "login", "password", 0, "21551251", Role.USER, null));
         User findUser = userDao.findById(user.getId());
         assertEquals(user, findUser);
@@ -42,7 +43,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void findAllUsersTest() throws LoginAlreadyRegisteredException {
+    void findAllUsersTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user1 = new User(null, "log1", "newpar1", 5, "123", Role.USER, null);
         User user2 = new User(null, "log2", "newpar2", 5, "123", Role.USER, null);
 
@@ -68,7 +69,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void updateUserTest() throws LoginAlreadyRegisteredException {
+    void updateUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User userToInsert = new User(null, "log", "paww", 5, "151521", Role.USER, null);
         User savedUser = userDao.save(userToInsert);
         userToInsert.setId(savedUser.getId());
@@ -83,7 +84,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void findByLoginUserTest() throws LoginAlreadyRegisteredException {
+    void findByLoginUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "l", "hji", 0, "51512", Role.USER, null));
         User userCheck = userDao.findByLogin("l");
         assertEquals(user, userCheck);
@@ -91,7 +92,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void findByPasswordUserTest() throws LoginAlreadyRegisteredException {
+    void findByPasswordUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "logindel2", "hji", 0, "51512", Role.USER, null));
         User userCheck = userDao.findByPassword("hji");
         assertEquals(user, userCheck);
@@ -99,7 +100,7 @@ public class UserDaoTest {
     }
 
     @Test
-    void findByLoginAndPasswordUserTest() throws LoginAlreadyRegisteredException {
+    void findByLoginAndPasswordUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "logindel3", "PASS", 0, "51512", Role.USER, null));
         User userCheck = userDao.findByLoginAndPassword("logindel3", "PASS");
         assertEquals(user, userCheck);
@@ -107,14 +108,14 @@ public class UserDaoTest {
     }
 
     @Test
-    void deleteByIdUserTest() throws LoginAlreadyRegisteredException {
+    void deleteByIdUserTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "logindel1", "pass", 0, "51512", Role.USER, null));
         userDao.deleteById(user.getId());
         assertNull(userDao.findById(user.getId()));
     }
 
     @Test
-    void DeleteByLoginTest() throws LoginAlreadyRegisteredException {
+    void DeleteByLoginTest() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = userDao.save(new User(null, "logindel", "hji", 0, "51512", Role.USER, null));
         userDao.deleteByLogin(user.getLogin());
         assertNull(userDao.findByLogin(user.getLogin()));

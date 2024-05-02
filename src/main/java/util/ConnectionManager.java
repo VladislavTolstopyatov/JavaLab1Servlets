@@ -22,7 +22,7 @@ public class ConnectionManager {
         }
     }
 
-    public static Connection getConnection() {
+    public  Connection getConnection() {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(PropertiesUtil.get(URL_KEY),

@@ -1,20 +1,17 @@
 package filters;
 
-import entities.Game;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import services.GameService;
 
-import javax.xml.crypto.dsig.spec.XPathType;
 import java.io.IOException;
 
 import static util.UrlPathUtil.*;
 
 @WebFilter("/*")
-public class AurhorizationFilter implements Filter {
+public class AuthorizationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,10 +28,10 @@ public class AurhorizationFilter implements Filter {
                 httpRequest.getRequestURI().equals(httpRequest.getContextPath() + REGISTRATION);
 
         if (!isLoggedIn && !isLoginOrRegistrationPage) {
-            // Если пользователь не авторизован и не находится на странице логина или регистрации, перенаправляем на страницу логина
+            // Если пользователь не находится на странице логина или регистрации, перенаправляем на страницу логина
             httpResponse.sendRedirect(httpRequest.getContextPath() + LOGIN);
         } else {
-            // Если пользователь авторизован или находится на странице логина или регистрации, продолжаем цепочку фильтров
+            // Если пользователь не находится на странице логина или регистрации, продолжаем цепочку фильтров
             chain.doFilter(request, response);
         }
     }

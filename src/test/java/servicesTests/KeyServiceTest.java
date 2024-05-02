@@ -7,6 +7,7 @@ import dto.UserDto;
 import entities.Game;
 import entities.Key;
 import entities.User;
+import exceptions.DataBaseException;
 import mappers.CreateKeyMapper;
 import mappers.KeyMapper;
 import org.assertj.core.api.Assertions;
@@ -36,9 +37,8 @@ public class KeyServiceTest {
     @Mock
     CreateKeyMapper createKeyMapper;
 
-
     @Test
-    void findByIdWhenKeyExists() {
+    void findByIdWhenKeyExists() throws DataBaseException {
         Key key = getKey();
         KeyDto keyDto = getKeyDto();
 
@@ -51,14 +51,14 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findByIdWhenKeyNotExists() {
+    void findByIdWhenKeyNotExists() throws DataBaseException {
         Integer id = 1;
         when(keyDao.findById(id)).thenReturn(null);
         assertThat(keyService.findById(id)).isEqualTo(null);
     }
 
     @Test
-    void findAllWhenKeysNotEmpty() {
+    void findAllWhenKeysNotEmpty() throws DataBaseException {
         Key key = getKey();
         List<Key> keys = List.of(key);
         KeyDto keyDto = getKeyDto();
@@ -75,7 +75,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findAllWhenKeysEmpty() {
+    void findAllWhenKeysEmpty() throws DataBaseException {
         when(keyDao.findAll())
                 .thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class,
@@ -83,7 +83,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findAllByGameIdWhenKeysExists() {
+    void findAllByGameIdWhenKeysExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         Key key = getKey();
         List<Key> keys = List.of(key);
@@ -102,7 +102,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findAllByGameTitleWhenKeysNotExists() {
+    void findAllByGameTitleWhenKeysNotExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         Integer id = gameDto.getId();
 
@@ -113,7 +113,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findAllByGameTitleWhenKeysExists() {
+    void findAllByGameTitleWhenKeysExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         Key key = getKey();
         List<Key> keys = List.of(key);
@@ -132,7 +132,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void findAllByGameIdWhenKeysNotExists() {
+    void findAllByGameIdWhenKeysNotExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         String title = gameDto.getTitle();
 
@@ -143,7 +143,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void deleteByIdWhenKeyExists() {
+    void deleteByIdWhenKeyExists() throws DataBaseException {
         KeyDto keyDto = getKeyDto();
         Integer id = keyDto.getId();
         when(keyDao.deleteById(id)).thenReturn(true);
@@ -151,7 +151,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void deleteByIdWhenKeyNotExists() {
+    void deleteByIdWhenKeyNotExists() throws DataBaseException {
         KeyDto keyDto = getKeyDto();
         Integer id = keyDto.getId();
         when(keyDao.deleteById(id)).thenReturn(false);
@@ -159,7 +159,7 @@ public class KeyServiceTest {
     }
 
     @Test
-    void createKey() {
+    void createKey() throws DataBaseException {
         Key key = getKey();
         KeyDto keyDto = getKeyDto();
 

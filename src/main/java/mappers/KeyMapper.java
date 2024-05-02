@@ -4,6 +4,7 @@ import dao.GameDao;
 import dao.KeyDao;
 import dto.KeyDto;
 import entities.Key;
+import exceptions.DataBaseException;
 import services.GameService;
 
 public class KeyMapper implements Imapper<Key, KeyDto> {
@@ -15,5 +16,6 @@ public class KeyMapper implements Imapper<Key, KeyDto> {
         return new KeyDto(key.getId(),
                 key.getKeyStr(),
                 gameService.findTitleById(key.getGame_id()));
+
     }
 }

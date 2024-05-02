@@ -6,6 +6,7 @@ import dto.GameDto;
 import dto.KeyDto;
 import entities.Game;
 import entities.Key;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import mappers.CreateGameMapper;
 import mappers.GameMapper;
@@ -21,7 +22,6 @@ public class GameService {
     private final CreateGameMapper createGameMapper;
     private final UpdateGameMapper updateGameMapper;
 
-
     public GameService(GameDao gameDao, KeyDao keyDao, GameMapper gameMapper, CreateGameMapper createGameMapper, UpdateGameMapper updateGameMapper) {
         this.gameDao = gameDao;
         this.keyDao = keyDao;
@@ -30,11 +30,11 @@ public class GameService {
         this.updateGameMapper = updateGameMapper;
     }
 
-    public GameDto findById(Integer id) {
+    public GameDto findById(Integer id) throws DataBaseException {
         return gameMapper.map(gameDao.findById(id));
     }
 
-    public GameDto findByTitle(String title) {
+    public GameDto findByTitle(String title) throws DataBaseException {
         Game game = gameDao.findByTitle(title);
         if (game != null) {
             List<Key> keys = keyDao.findAllByTitle(title);
@@ -46,17 +46,13 @@ public class GameService {
         return null;
     }
 
-    public Game createGame(GameDto gameDto) throws GameWithSuchTitleAlreadyExistsException {
+    public Game createGame(GameDto gameDto) throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game game;
-        try {
-            game = gameDao.save(createGameMapper.map(gameDto));
-        } catch (GameWithSuchTitleAlreadyExistsException e) {
-            throw new GameWithSuchTitleAlreadyExistsException(e.getMessage());
-        }
+        game = gameDao.save(createGameMapper.map(gameDto));
         return game;
     }
 
-    public List<GameDto> getAll() {
+    public List<GameDto> getAll() throws DataBaseException {
         List<Game> games = gameDao.findAll();
         List<GameDto> gamesDto = games.stream().map(gameMapper::map).toList();
         for (GameDto g : gamesDto) {
@@ -70,11 +66,11 @@ public class GameService {
         return gameDao.findTitleById(id);
     }
 
-    public Integer findIdByTitle(String title) {
+    public Integer findIdByTitle(String title) throws DataBaseException {
         return gameDao.findIdByTitle(title);
     }
 
-    public void update(GameDto gameDto) {
+    public void update(GameDto gameDto) throws DataBaseException {
         gameDao.update(updateGameMapper.map(gameDto));
     }
 

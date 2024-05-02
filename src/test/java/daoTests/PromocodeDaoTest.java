@@ -2,6 +2,7 @@ package daoTests;
 
 import dao.PromocodeDao;
 import entities.Promocode;
+import exceptions.DataBaseException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class PromocodeDaoTest {
     PromocodeDao promocodeDao = new PromocodeDao();
 
     @Test
-    void SavePromocodeTest() {
+    void SavePromocodeTest() throws DataBaseException {
         Promocode testPromocode = new Promocode(null, "2136161", 10);
         promocodeDao.save(testPromocode);
         List<Promocode> promocodes = promocodeDao.findAll();
@@ -27,7 +28,7 @@ public class PromocodeDaoTest {
     }
 
     @Test
-    void findByIdTest() {
+    void findByIdTest() throws DataBaseException {
         Promocode promocodeFromDao = promocodeDao.save(new Promocode(null, "promo", 10));
         Promocode promocode = promocodeDao.findById(promocodeFromDao.getId());
         assertEquals(promocodeFromDao, promocode);
@@ -35,7 +36,7 @@ public class PromocodeDaoTest {
     }
 
     @Test
-    void findAllPromocodes() {
+    void findAllPromocodes() throws DataBaseException {
         Promocode promocode1 = new Promocode(null, "tyes1", 10);
         Promocode promocode2 = new Promocode(null, "dsahg", 10);
 
@@ -60,7 +61,7 @@ public class PromocodeDaoTest {
     }
 
     @Test
-    void updatePromocodeTest() {
+    void updatePromocodeTest() throws DataBaseException {
         Promocode promocodeToInsert = new Promocode(null, "12515", 10);
         Promocode promocodeFromDao = promocodeDao.save(promocodeToInsert);
         promocodeToInsert.setId(promocodeFromDao.getId());
@@ -76,14 +77,14 @@ public class PromocodeDaoTest {
     }
 
     @Test
-    void deleteByIdPromocodeTest() {
+    void deleteByIdPromocodeTest() throws DataBaseException {
         Promocode promocode = promocodeDao.save(new Promocode(null, "yesy", 1));
         promocodeDao.deleteById(promocode.getId());
         assertNull(promocodeDao.findById(promocode.getId()));
     }
 
     @Test
-    void findByPromocodeStrTest() {
+    void findByPromocodeStrTest() throws DataBaseException {
         Promocode promocode = promocodeDao.save(new Promocode(null, "test", 1));
         Promocode promocodeFromDao = promocodeDao.findByPromocode(promocode.getPromoStr());
         assertEquals(promocode.getPromoStr(), promocodeFromDao.getPromoStr());

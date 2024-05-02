@@ -4,6 +4,7 @@ import dao.GameDao;
 import dao.PurchaseDao;
 import dao.UserDao;
 import entities.*;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import exceptions.LoginAlreadyRegisteredException;
 import org.junit.jupiter.api.AfterEach;
@@ -26,19 +27,19 @@ public class PurchaseDaoTest {
     User user;
 
     @BeforeEach
-    void init() throws GameWithSuchTitleAlreadyExistsException, LoginAlreadyRegisteredException {
+    void init() throws GameWithSuchTitleAlreadyExistsException, LoginAlreadyRegisteredException, DataBaseException {
         game = gameDao.save(new Game(null, "TestGameForGame", "test", 200, LocalDate.now(),null));
-        user = userDao.save(new User(null, "login", "password", 50, "88005553535", Role.USER, null));
+        user = userDao.save(new User(null, "login1", "password", 50, "88005553535", Role.USER, null));
     }
 
     @AfterEach
-    void deleteFromDB() {
+    void deleteFromDB() throws DataBaseException {
         userDao.deleteById(user.getId());
         gameDao.deleteById(game.getId());
     }
 
     @Test
-    void savePurchaseTest() {
+    void savePurchaseTest() throws DataBaseException {
         Purchase purchase = new Purchase(null, LocalDate.now(), null,user.getId(),game.getId(),"test");
         Purchase purchaseCheck = purchaseDao.save(purchase);
         purchase.setId(purchaseCheck.getId());
@@ -53,14 +54,14 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void findByIdPurchaseTest() {
+    void findByIdPurchaseTest() throws DataBaseException {
         Purchase purchase = purchaseDao.save(new Purchase(null, LocalDate.now(), null, user.getId(),game.getId(),"test"));
         Purchase findPurchase = purchaseDao.findById(purchase.getId());
         assertEquals(purchase, findPurchase);
     }
 
     @Test
-    void findAllPurchasesTest() {
+    void findAllPurchasesTest() throws DataBaseException {
         Purchase purchase1 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
         Purchase purchase2 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(),game.getId(),"test"));
 
@@ -78,7 +79,7 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void findAllByGameIdPurchaseTest() {
+    void findAllByGameIdPurchaseTest() throws DataBaseException {
         Purchase purchase1 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
         Purchase purchase2 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
 
@@ -96,7 +97,7 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void findAllByUserIdPurchaseTest() {
+    void findAllByUserIdPurchaseTest() throws DataBaseException {
 
         Purchase purchase1 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
         Purchase purchase2 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
@@ -115,7 +116,7 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void findAllByPurchaseDatePurchaseTest() {
+    void findAllByPurchaseDatePurchaseTest() throws DataBaseException {
         LocalDate localDate = LocalDate.of(2024, 3, 4);
         Purchase purchase1 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
         Purchase purchase2 = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
@@ -134,7 +135,7 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void updatePurchaseTest() {
+    void updatePurchaseTest() throws DataBaseException {
         Purchase purchaseFirst = new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test");
         Purchase purchase = purchaseDao.save(purchaseFirst);
         purchaseFirst.setId(purchase.getId());
@@ -149,7 +150,7 @@ public class PurchaseDaoTest {
     }
 
     @Test
-    void deleteByIdPurchaseTest() {
+    void deleteByIdPurchaseTest() throws DataBaseException {
         Purchase purchase = purchaseDao.save(new Purchase(null, LocalDate.now(), null,user.getId(), game.getId(), "test"));
         purchaseDao.deleteById(purchase.getId());
         assertNull(purchaseDao.findById(purchase.getId()));

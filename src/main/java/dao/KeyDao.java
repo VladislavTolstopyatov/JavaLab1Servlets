@@ -1,13 +1,16 @@
 package dao;
 
 import entities.Key;
+import exceptions.DataBaseException;
 import util.ConnectionManager;
-
+import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class KeyDao implements Dao<Integer, Key> {
+    private static final ConnectionManager connectionManager = new ConnectionManager();
+    private static final Logger logger = Logger.getLogger(KeyDao.class);
     private static final String FIND_ALL_KEYS = """
             SELECT key_id, game_key, game_id
             FROM keys
@@ -51,8 +54,8 @@ public class KeyDao implements Dao<Integer, Key> {
             """;
 
     @Override
-    public Key save(Key key) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public Key save(Key key) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, key.getKeyStr());
@@ -64,13 +67,14 @@ public class KeyDao implements Dao<Integer, Key> {
             }
             return key;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public Key findById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public Key findById(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_KEY_BY_ID)) {
             preparedStatement.setObject(1, id);
 
@@ -81,13 +85,14 @@ public class KeyDao implements Dao<Integer, Key> {
             }
             return key;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public List<Key> findAll() {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Key> findAll() throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_KEYS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Key> result = new ArrayList<>();
@@ -96,12 +101,13 @@ public class KeyDao implements Dao<Integer, Key> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public List<Key> findAllByGameId(Integer game_id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Key> findAllByGameId(Integer game_id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_ID)) {
             preparedStatement.setObject(1, game_id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -111,12 +117,13 @@ public class KeyDao implements Dao<Integer, Key> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public List<Key> findAllByTitle(String title) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public List<Key> findAllByTitle(String title) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_GAME_TITLE)) {
             preparedStatement.setObject(1, title);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -126,32 +133,35 @@ public class KeyDao implements Dao<Integer, Key> {
             }
             return result;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public void update(Key key) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public void update(Key key) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setObject(1, key.getKeyStr());
             preparedStatement.setObject(2, key.getGame_id());
             preparedStatement.setObject(3, key.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public boolean deleteById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public boolean deleteById(Integer id) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
             preparedStatement.setObject(1, id);
             int executeUpdate = preparedStatement.executeUpdate();
             return executeUpdate > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 

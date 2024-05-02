@@ -1,17 +1,20 @@
 package dao;
 
 import entities.Game;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import util.ConnectionManager;
 import util.TimeUtils;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameDao implements Dao<Integer, Game> {
-
-    private final String GAME_WITH_SUCH_TITLE_ALREADY_EXISTS = "Игра с таким названием уже существует!";
+    private static final ConnectionManager connectionManager = new ConnectionManager();
+    private static final Logger logger = Logger.getLogger(GameDao.class);
+    private static final String GAME_WITH_SUCH_TITLE_ALREADY_EXISTS = "Игра с таким названием уже существует!";
 
     // найти все игры
     private static final String FIND_ALL_GAMES = """
@@ -64,14 +67,14 @@ public class GameDao implements Dao<Integer, Game> {
             """;
 
     @Override
-    public Game save(Game game) throws GameWithSuchTitleAlreadyExistsException {
+    public Game save(Game game) throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game gameCheck = findByTitle(game.getTitle());
         if (gameCheck != null) {
             throw new GameWithSuchTitleAlreadyExistsException(GAME_WITH_SUCH_TITLE_ALREADY_EXISTS);
         }
 
-        try (final Connection connection = ConnectionManager.getConnection();
-             final PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SQL,
                      Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setObject(1, game.getTitle());
             preparedStatement.setObject(2, game.getDescription());
@@ -85,14 +88,15 @@ public class GameDao implements Dao<Integer, Game> {
             }
             return game;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
     @Override
-    public Game findById(Integer game_id) {
+    public Game findById(Integer game_id) throws DataBaseException {
         Game game = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_GAME_BY_ID)) {
 
             preparedStatement.setLong(1, game_id);
@@ -103,16 +107,17 @@ public class GameDao implements Dao<Integer, Game> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
         return game;
     }
 
     @Override
-    public List<Game> findAll() {
+    public List<Game> findAll() throws DataBaseException {
         List<Game> games = new ArrayList<>();
 
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement pst = connection.prepareStatement(FIND_ALL_GAMES)) {
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
@@ -120,29 +125,31 @@ public class GameDao implements Dao<Integer, Game> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
 
         return games;
     }
 
     @Override
-    public void update(Game game) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public void update(Game game) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setDouble(1, game.getPrice());
             preparedStatement.setObject(2, game.getId());
             //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
     }
 
-    public Integer findIdByTitle(String title) {
-        try (Connection connection = ConnectionManager.getConnection();
+    public Integer findIdByTitle(String title) throws DataBaseException {
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ID_BY_TITLE)) {
-            preparedStatement.setString(1,title);
+            preparedStatement.setString(1, title);
             //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
             Integer result;
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -152,13 +159,14 @@ public class GameDao implements Dao<Integer, Game> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
         return null;
     }
 
     public String findTitleById(Integer id) {
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_TITLE_BY_ID)) {
             preparedStatement.setInt(1, id);
             //executeUpdate: выполняет такие команды, как INSERT, UPDATE, DELETE, CREATE TABLE, DROP TABLE
@@ -170,27 +178,29 @@ public class GameDao implements Dao<Integer, Game> {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new RuntimeException();
         }
         return null;
     }
 
     @Override
     public boolean deleteById(Integer game_id) {
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
             preparedStatement.setLong(1, game_id);
 
             // проверка, что кол-во затронутых строк > 0
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public Game findByTitle(String title) {
+    public Game findByTitle(String title) throws DataBaseException {
         Game game = null;
-        try (Connection connection = ConnectionManager.getConnection();
+        try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_TITLE)) {
             preparedStatement.setString(1, title);
 
@@ -201,8 +211,9 @@ public class GameDao implements Dao<Integer, Game> {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            throw new DataBaseException(e.getMessage());
         }
         return game;
     }

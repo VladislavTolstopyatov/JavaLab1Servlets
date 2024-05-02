@@ -1,7 +1,9 @@
 package servlets;
 
+import dao.GameDao;
 import dao.KeyDao;
 import dto.KeyDto;
+import exceptions.DataBaseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mappers.CreateKeyMapper;
 import mappers.KeyMapper;
+import org.apache.log4j.Logger;
 import services.KeyService;
 import util.JspHelper;
 
@@ -19,7 +22,8 @@ import static util.UrlPathUtil.GAMES;
 
 @WebServlet(CREATE_KEY)
 
-public class createKeyServlet extends HttpServlet {
+public class CreateKeyServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(CreateKeyServlet.class);
     private final KeyService keyService = new KeyService(new KeyDao(), new KeyMapper(), new CreateKeyMapper());
 
     @Override
@@ -35,7 +39,13 @@ public class createKeyServlet extends HttpServlet {
         req.setAttribute("title", title);
         String keyStr = req.getParameter("keyStr");
         KeyDto keyDto = new KeyDto(null, keyStr, title);
-        keyService.createKey(keyDto);
+        try {
+            keyService.createKey(keyDto);
+        } catch (DataBaseException e) {
+            logger.error(e.getMessage());
+            req.setAttribute("error", e.getMessage());
+            doGet(req, resp);
+        }
         resp.sendRedirect(GAMES);
     }
 }

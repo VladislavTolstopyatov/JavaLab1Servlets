@@ -2,6 +2,7 @@ package daoTests;
 
 import dao.GameDao;
 import entities.Game;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ public class GameDaoTest {
 
 
     @Test
-    void findAllGamesTest() throws GameWithSuchTitleAlreadyExistsException {
+    void findAllGamesTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game game1 = new Game(null, "a", "a", 50, LocalDate.now(), null);
         Game game2 = new Game(null, "b", "b", 30, LocalDate.now(), null);
 
@@ -41,7 +42,7 @@ public class GameDaoTest {
     }
 
     @Test
-    void saveGameTest() throws GameWithSuchTitleAlreadyExistsException {
+    void saveGameTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game testGame = new Game(null, "testTitle", "testDescription", 1000, LocalDate.now(), null);
         gameDao.save(testGame);
         List<Game> games = gameDao.findAll();
@@ -55,7 +56,7 @@ public class GameDaoTest {
     }
 
     @Test
-    void findByIdGameTest() throws GameWithSuchTitleAlreadyExistsException {
+    void findByIdGameTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game game = gameDao.save(new Game(null, "test", "testDescription", 1000, LocalDate.now(), null));
         Game gameFromDao = gameDao.findById(game.getId());
         assertEquals(game, gameFromDao);
@@ -63,7 +64,7 @@ public class GameDaoTest {
     }
 
     @Test
-    void updateGameTest() throws GameWithSuchTitleAlreadyExistsException {
+    void updateGameTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game gameToInsert = new Game(null, "testing", "testing", 25, LocalDate.now(), null);
         Game game = gameDao.save(gameToInsert);
 
@@ -77,7 +78,7 @@ public class GameDaoTest {
     }
 
     @Test
-    void deleteByIdGameTest() throws GameWithSuchTitleAlreadyExistsException {
+    void deleteByIdGameTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game gameToInsert = new Game(null, "K", "K", 2000, LocalDate.now(), null);
         Game gameFromDao = gameDao.save(gameToInsert);
 
@@ -88,7 +89,7 @@ public class GameDaoTest {
     }
 
     @Test
-    void findByTitleGameTest() throws GameWithSuchTitleAlreadyExistsException {
+    void findByTitleGameTest() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game gameToInsert = new Game(null, "tTITLE", "ababab", 2000, LocalDate.now(), null);
         Game gameFromDao = gameDao.save(gameToInsert);
 

@@ -1,9 +1,11 @@
 package servlets;
 
+import dao.GameDao;
 import dao.UserDao;
 import dto.CreateUserDto;
 import entities.Role;
 import entities.User;
+import exceptions.DataBaseException;
 import exceptions.LoginAlreadyRegisteredException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import mappers.CreateUserMapper;
 import mappers.UserDtoMapper;
 import mappers.UserMapper;
-import org.mindrot.jbcrypt.BCrypt;
+import org.apache.log4j.Logger;
 import services.UserService;
 import util.JspHelper;
 import util.PasswordHasher;
@@ -24,7 +26,8 @@ import static util.UrlPathUtil.LOGIN;
 import static util.UrlPathUtil.REGISTRATION;
 
 @WebServlet(REGISTRATION)
-public class registrationServlet extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(RegistrationServlet.class);
     private final UserService userService = new UserService(new UserDao(),
             new UserMapper(),
             new CreateUserMapper(),
@@ -46,12 +49,17 @@ public class registrationServlet extends HttpServlet {
                     PasswordHasher.md5(password),
                     0,
                     cardNumber,
-                    Role.ADMIN));
+                    Role.USER));
             resp.sendRedirect(req.getContextPath() + LOGIN);
         } catch (LoginAlreadyRegisteredException | Exception e) {
+            logger.error(e.getMessage());
             String message = e.getMessage();
             req.setAttribute("message", message);
             req.getRequestDispatcher(JspHelper.get("registration")).forward(req, resp);
+        } catch (DataBaseException e) {
+            logger.error(e.getMessage());
+            req.setAttribute("error", e.getMessage());
+            doGet(req, resp);
         }
     }
 }

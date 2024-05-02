@@ -4,6 +4,7 @@ import dao.GameDao;
 import dao.KeyDao;
 import dto.GameDto;
 import entities.Game;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import mappers.CreateGameMapper;
 import mappers.GameMapper;
@@ -30,7 +31,6 @@ public class GameServiceTest {
     KeyDao keyDao;
     @Mock
     GameMapper gameMapper;
-
     @Mock
     CreateGameMapper createGameMapper;
     @InjectMocks
@@ -51,7 +51,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void findByTitleWhenGameExists() throws GameWithSuchTitleAlreadyExistsException {
+    void findByTitleWhenGameExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         Game game = getGame();
         String title = gameDto.getTitle();
@@ -63,7 +63,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void findByTitleWhenGameNotExists() throws GameWithSuchTitleAlreadyExistsException {
+    void findByTitleWhenGameNotExists() throws DataBaseException {
         GameDto gameDto = getGameDto();
         String title = gameDto.getTitle();
 
@@ -72,7 +72,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void getAllWhenGamesNotEmpty() {
+    void getAllWhenGamesNotEmpty() throws DataBaseException {
         Game game = getGame();
         List<Game> games = List.of(game);
         GameDto gameDto = getGameDto();
@@ -89,7 +89,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void getAllWhenGamesEmpty() {
+    void getAllWhenGamesEmpty() throws DataBaseException {
         when(gameDao.findAll())
                 .thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class,
@@ -97,7 +97,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void findByIdWhenGameExists() {
+    void findByIdWhenGameExists() throws DataBaseException {
         Game game = getGame();
         GameDto gameDto = getGameDto();
         Integer id = gameDto.getId();
@@ -109,14 +109,14 @@ public class GameServiceTest {
     }
 
     @Test
-    void findByIdWhenGameNotExists() {
+    void findByIdWhenGameNotExists() throws DataBaseException {
         Integer id = 1;
         when(gameDao.findById(id)).thenReturn(null);
         assertThat(gameService.findById(id)).isEqualTo(null);
     }
 
     @Test
-    void findTitleByIdWhenGameExists() {
+    void findTitleByIdWhenGameExists() throws DataBaseException {
         Game game = getGame();
         GameDto gameDto = getGameDto();
 
@@ -129,7 +129,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void findTitleByIdWhenGameNotExists() {
+    void findTitleByIdWhenGameNotExists() throws DataBaseException {
         Integer id = 1;
 
         when(gameDao.findTitleById(id)).thenReturn(null);
@@ -137,7 +137,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void findIdByTitleWhenGameExists() {
+    void findIdByTitleWhenGameExists() throws DataBaseException {
         Game game = getGame();
         GameDto gameDto = getGameDto();
 
@@ -150,14 +150,14 @@ public class GameServiceTest {
     }
 
     @Test
-    void findIdByTitleWhenGameNotExists() {
+    void findIdByTitleWhenGameNotExists() throws DataBaseException {
         String title = "title";
         when(gameDao.findIdByTitle(title)).thenReturn(null);
         assertThat(gameService.findIdByTitle(title)).isEqualTo(null);
     }
 
     @Test
-    void createGameWhenTitleUnique() throws GameWithSuchTitleAlreadyExistsException {
+    void createGameWhenTitleUnique() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game game = getGame();
         GameDto gameDto = getGameDto();
 
@@ -167,7 +167,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void createGameWhenTitleNotUnique() throws GameWithSuchTitleAlreadyExistsException {
+    void createGameWhenTitleNotUnique() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         Game game = getGame();
         GameDto gameDto = getGameDto();
 

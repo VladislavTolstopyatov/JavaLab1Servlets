@@ -5,6 +5,7 @@ import dto.CreateUserDto;
 import dto.UserDto;
 import entities.Role;
 import entities.User;
+import exceptions.DataBaseException;
 import exceptions.LoginAlreadyRegisteredException;
 import mappers.CreateUserMapper;
 import mappers.UserMapper;
@@ -35,7 +36,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    void testCreateUserWhenLoginNotExists() throws LoginAlreadyRegisteredException {
+    void testCreateUserWhenLoginNotExists() throws LoginAlreadyRegisteredException, DataBaseException {
         CreateUserDto createUserDto = getCreateUserDto();
         User user = getUser();
 
@@ -48,7 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCreateUserWhenLoginExists() throws LoginAlreadyRegisteredException {
+    void testCreateUserWhenLoginExists() throws LoginAlreadyRegisteredException, DataBaseException {
         CreateUserDto createUserDto = getCreateUserDto();
         User user = getUser();
 
@@ -60,21 +61,21 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteByIdWhenUserNotFound() throws LoginAlreadyRegisteredException {
+    void deleteByIdWhenUserNotFound() throws LoginAlreadyRegisteredException, DataBaseException {
         Integer id = 1;
         when(userDao.deleteById(id)).thenReturn(false);
         assertThat(userService.deleteById(id)).isEqualTo(false);
     }
 
     @Test
-    void deleteByIdWhenUserFound() throws LoginAlreadyRegisteredException {
+    void deleteByIdWhenUserFound() throws LoginAlreadyRegisteredException, DataBaseException {
         Integer id = 1;
         when(userDao.deleteById(id)).thenReturn(true);
         assertThat(userService.deleteById(id)).isEqualTo(true);
     }
 
     @Test
-    void findByLoginWhenUserExists() throws LoginAlreadyRegisteredException {
+    void findByLoginWhenUserExists() throws LoginAlreadyRegisteredException, DataBaseException {
         UserDto userDto = getUserDto();
         User user = getUser();
         String login = user.getLogin();
@@ -85,7 +86,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginWhenUserNotExists() throws LoginAlreadyRegisteredException {
+    void findByLoginWhenUserNotExists() throws LoginAlreadyRegisteredException, DataBaseException {
         User user = getUser();
         String login = user.getLogin();
         when(userDao.findByLogin(login)).thenReturn(null);
@@ -93,7 +94,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginAndPasswordWhenUserExists() throws LoginAlreadyRegisteredException {
+    void findByLoginAndPasswordWhenUserExists() throws LoginAlreadyRegisteredException, DataBaseException, Exception {
         UserDto userDto = getUserDto();
         User user = getUser();
         String login = user.getLogin();
@@ -106,7 +107,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginAndPasswordWhenUserNotExists() {
+    void findByLoginAndPasswordWhenUserNotExists() throws DataBaseException, Exception {
         User user = getUser();
         String login = user.getLogin();
         String password = user.getPassword();
@@ -115,21 +116,21 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteByLoginWhenUserNotFound() {
+    void deleteByLoginWhenUserNotFound() throws DataBaseException {
         String login = "login";
         when(userDao.deleteByLogin(login)).thenReturn(false);
         assertThat(userService.deleteByLogin(login)).isEqualTo(false);
     }
 
     @Test
-    void deleteByLoginWhenUserFound() {
+    void deleteByLoginWhenUserFound() throws DataBaseException {
         String login = "login";
         when(userDao.deleteByLogin(login)).thenReturn(true);
         assertThat(userService.deleteByLogin(login)).isEqualTo(true);
     }
 
     @Test
-    void findByPasswordWhenUserFound() throws LoginAlreadyRegisteredException {
+    void findByPasswordWhenUserFound() throws LoginAlreadyRegisteredException, DataBaseException {
         UserDto userDto = getUserDto();
         User user = getUser();
         String password = user.getPassword();
@@ -141,7 +142,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findByLoginAndPasswordWhenUserNotFound() {
+    void findByLoginAndPasswordWhenUserNotFound() throws DataBaseException {
         User user = getUser();
         String password = user.getPassword();
         when(userDao.findByPassword(password)).thenReturn(null);
@@ -149,7 +150,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findAllWhenUsersNotEmpty() {
+    void findAllWhenUsersNotEmpty() throws DataBaseException {
         User user = getUser();
         List<User> users = List.of(user);
         UserDto userDto = getUserDto();
@@ -167,7 +168,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void findAllWhenUsersEmpty() {
+    void findAllWhenUsersEmpty() throws DataBaseException {
         when(userDao.findAll())
                 .thenReturn(null);
         NullPointerException exception = assertThrows(NullPointerException.class,

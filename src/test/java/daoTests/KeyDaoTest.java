@@ -4,6 +4,7 @@ import dao.GameDao;
 import dao.KeyDao;
 import entities.Game;
 import entities.Key;
+import exceptions.DataBaseException;
 import exceptions.GameWithSuchTitleAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ public class KeyDaoTest {
     static Game game;
 
     @BeforeEach
-    void initGame() throws GameWithSuchTitleAlreadyExistsException {
+    void initGame() throws GameWithSuchTitleAlreadyExistsException, DataBaseException {
         game = gameDao.save(new Game(null, "TestGameForGame", "test", 200, LocalDate.now(),null));
     }
 
@@ -32,7 +33,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void saveKeyTest() {
+    void saveKeyTest() throws DataBaseException {
         Key testKey = new Key(null, "123612hbn", game.getId());
         keyDao.save(testKey);
         List<Key> keys = keyDao.findAll();
@@ -46,7 +47,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void findByIdKeyTest() {
+    void findByIdKeyTest() throws DataBaseException {
         Key keyToInsert = new Key(null, "3690o12yh1ki", game.getId());
         Key keyFromDao = keyDao.save(keyToInsert);
         keyToInsert.setId(keyFromDao.getId());
@@ -59,7 +60,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void findAllKeysTest() {
+    void findAllKeysTest() throws DataBaseException {
         Key key1 = new Key(null, "21581275asgas", game.getId());
         Key key2 = new Key(null, "21qhqnd", game.getId());
 
@@ -80,7 +81,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void findAllKeysByGameIdTest() {
+    void findAllKeysByGameIdTest() throws DataBaseException {
         Key key1 = new Key(null, "21581275asgas", game.getId());
         Key key2 = new Key(null, "21qhqnd", game.getId());
 
@@ -103,7 +104,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void updateKeyTest() {
+    void updateKeyTest() throws DataBaseException {
         Key keyToInsert = new Key(null, "32lkgjweh12", game.getId());
         Key keyFromDao = keyDao.save(keyToInsert);
         keyToInsert.setId(keyFromDao.getId());
@@ -120,7 +121,7 @@ public class KeyDaoTest {
     }
 
     @Test
-    void deleteByIdKeyTest() {
+    void deleteByIdKeyTest() throws DataBaseException {
         Key keyToInsert = new Key(null, "qlogjql121", game.getId());
         Key savedKey = keyDao.save(keyToInsert);
 
